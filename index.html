@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quentin Demuynck – Game Developer Portfolio</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans leading-relaxed">
+
+  <!-- Responsive Header / Navbar -->
+  <header class="bg-gray-800 fixed w-full z-10">
+    <div class="container mx-auto flex items-center justify-between px-6 py-4">
+      <a href="#" class="text-2xl font-bold">Quentin Demuynck</a>
+      <nav>
+        <button id="nav-toggle" class="md:hidden focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <ul id="nav-menu" class="hidden md:flex space-x-6">
+          <li class="relative">
+            <button id="projects-toggle" class="hover:text-indigo-400 focus:outline-none">Projects</button>
+            <ul id="projects-dropdown" class="hidden absolute bg-gray-800 mt-2 py-2 w-48 rounded-lg shadow-lg">
+              <li><a href="#completed-projects" class="block px-4 py-2 hover:bg-gray-700">Completed Projects</a></li>
+              <li><a href="#in-progress" class="block px-4 py-2 hover:bg-gray-700">In Progress</a></li>
+            </ul>
+          </li>
+          <li><a href="#about-contact" class="hover:text-indigo-400">About & Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero / Intro -->
+  <section class="min-h-screen flex items-center justify-center px-6 pt-24">
+    <div class="text-center max-w-2xl">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">Hi, I'm Quentin Demuynck</h1>
+      <p class="text-xl md:text-2xl text-gray-400 mb-6">
+        Game Developer &ndash; Currently studying Digital Arts & Entertainment at Howest Kortrijk
+      </p>
+      <p class="mb-2">Languages &amp; Tools: C++, C#, JavaScript, Python, Lua, GDScript, …</p>
+      <p class="mb-2">Engines: Unreal Engine, Unity, Godot, School-built engines, Custom engine</p>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <main class="px-6 py-12 space-y-12">
+    <section id="projects">
+      <h2 class="text-3xl md:text-4xl font-semibold mb-4 text-center">My Projects</h2>
+      
+      <div id="completed-projects" class="max-w-4xl mx-auto mb-8">
+        <h3 class="text-2xl font-bold mb-2">Completed Projects</h3>
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Project Card -->
+          <article class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg flex flex-col">
+            <img src="path/to/thumbnail.jpg" alt="Project Name screenshot" class="w-full h-48 object-cover">
+            <div class="p-4 flex-grow">
+              <h4 class="text-xl font-bold mb-1">Project Name</h4>
+              <p class="text-gray-400 mb-3">Short description of what the project is and what technologies you used.</p>
+            </div>
+            <div class="p-4">
+              <a href="#" class="text-indigo-400 hover:text-indigo-200">See more</a>
+            </div>
+          </article>
+          <!-- Repeat cards -->
+        </div>
+      </div>
+
+      <div id="in-progress" class="max-w-4xl mx-auto">
+        <h3 class="text-2xl font-bold mb-2">In Progress</h3>
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <!-- In-progress Project Card -->
+          <article class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg flex flex-col">
+            <img src="path/to/inprogress-thumbnail.jpg" alt="In Progress screenshot" class="w-full h-48 object-cover">
+            <div class="p-4 flex-grow">
+              <h4 class="text-xl font-bold mb-1">In Progress Project</h4>
+              <p class="text-gray-400 mb-3">bla bla bla...</p>
+            </div>
+            <div class="p-4">
+              <a href="#" class="text-indigo-400 hover:text-indigo-200">See more</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- About & Contact -->
+    <section id="about-contact" class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-semibold mb-4">About Me</h2>
+      <p class="text-gray-400 mb-8">
+        I'm driven by game development, writing elegant C++ code, and mastering new engines—and right now, my main focus is exploring AI applications in games.
+      </p>
+      <p class="text-gray-400 mb-8">
+      </p>
+
+      <h2 class="text-3xl md:text-4xl font-semibold mb-4">Get In Touch</h2>
+      <p>
+        <a href="mailto:quentibiew@gmail.com" class="text-indigo-400 hover:text-indigo-200">quentibiew@gmail.com</a>  
+        •  
+        <a href="https://github.com/QuentinDemuynck-DAE" target="_blank" class="text-indigo-400 hover:text-indigo-200">GitHub</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="py-6 text-center text-gray-600">
+    &copy; 2025 Quentin Demuynck. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile nav toggle
+    const btn = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-menu');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+
+    // Projects dropdown toggle
+    const projectsBtn = document.getElementById('projects-toggle');
+    const projectsDropdown = document.getElementById('projects-dropdown');
+    projectsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      projectsDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      if (!projectsDropdown.classList.contains('hidden')) {
+        projectsDropdown.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
