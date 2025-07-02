@@ -1,0 +1,23 @@
+<!-- project-card template -->
+<template id="project-card-template">
+  <article class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg flex flex-col">
+    <img class="card-thumb w-full h-48 object-cover" alt="">
+    <div class="p-4 flex-grow">
+      <h4 class="card-title text-xl font-bold mb-1"></h4>
+      <p class="card-desc text-gray-400 mb-3"></p>
+    </div>
+    <div class="p-4">
+      <a class="card-link text-indigo-400 hover:text-indigo-200">See more</a>
+    </div>
+  </article>
+</template>
+
+<template id="projects-section-template">
+  <div class="max-w-4xl mx-auto mb-8 text-center">
+    <h3 class="section-title text-2xl font-bold mb-2"></h3>
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
