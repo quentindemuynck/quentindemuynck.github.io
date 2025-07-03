@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
+
+<style>
+
+  .hero-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('./images/hero.gif') center/cover no-repeat;
+  filter: blur(8px);
+  transform: scale(1.05);         
+  z-index: -1;
+  transition: opacity 0.2s ease-out;
+}
+</style>
+
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quentin Demuynck – Game Developer Portfolio</title>
+
   <script type="module">
     window.addEventListener('DOMContentLoaded', async () => {
       // fetch + inject your templates.html
@@ -33,11 +55,30 @@
           dropdown.appendChild(li);
         }
       });
+
+        AOS.init({
+        duration: 700,
+        easing: 'ease-out',
+        once: false
+        });
+
+        AOS.refresh();
     });
   </script>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS (Animate On Scroll) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+  />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+
+
+
 </head>
 <body class="bg-gray-900 text-white font-sans leading-relaxed">
 
@@ -64,7 +105,7 @@
   </header>
 
   <!-- Hero / Intro -->
-  <section class="min-h-screen flex items-center justify-center px-6 pt-24">
+  <section class="hero-gradient min-h-screen flex items-center justify-center px-6 pt-24">
     <div class="text-center max-w-2xl">
       <h1 class="text-5xl md:text-6xl font-bold mb-4">Hi, I'm Quentin Demuynck</h1>
       <p class="text-xl md:text-2xl text-gray-400 mb-6">
@@ -89,7 +130,8 @@
           title="Zombie AI"
           description="An AI which survives using a behaviour tree." 
           thumbnail="./images/zombie.gif"
-          url="#alpha">
+          url="#alpha"
+          tags="C++">
         </project-card>
 
         <project-card
@@ -152,6 +194,16 @@
       if (!projectsDropdown.classList.contains('hidden')) {
         projectsDropdown.classList.add('hidden');
       }
+    });
+  </script>
+
+    <script>
+    const hero = document.querySelector('.hero-gradient');
+    const heroHeight = hero.offsetHeight;
+
+    window.addEventListener('scroll', () => {
+      const scrolled = Math.min(window.scrollY, heroHeight);
+      hero.style.opacity = 1 - (scrolled / heroHeight);
     });
   </script>
 </body>
