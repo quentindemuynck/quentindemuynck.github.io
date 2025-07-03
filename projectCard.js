@@ -7,6 +7,7 @@ const TAG_META = {
   'Unity':    { color: '#131313', icon: './icons/unity.png' },
   'C#':       { color: '#5E438F', icon: './icons/csharp.png' },
   'Python':   { color: '#1d692d', icon: './icons/python.png' },
+  'Blueprints':{ color: '#3b2b77', icon: './icons/blueprint.png' },
   'JS':       { color: '#f1e05a'},
   'AI':       { color: '#373f50'},
   'Custom Interface': { color: '#373f50'},
