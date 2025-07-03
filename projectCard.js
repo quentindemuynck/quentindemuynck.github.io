@@ -1,12 +1,18 @@
 
 
 const TAG_META = {
-  'C++':      { color: '#f34b7d', icon: './assets/icons/gdscript.png' },
-  'GDScript': { color: '#355570', icon: './assets/icons/gdscript.png' },
-  'Unity':    { color: '#000000', icon: './assets/icons/gdscript.png' },
-  'C#':       { color: '#178600', icon: './assets/icons/gdscript.png' },
-  'Python':   { color: '#3572A5', icon: './assets/icons/gdscript.png' },
-  'JS':       { color: '#f1e05a', icon: './assets/icons/gdscript.png' },
+  'C++':      { color: '#659AD2', icon: './icons/cpp.png' },
+  'GDScript': { color: '#6f97b8'},
+  'Godot':    { color: '#6f97b8', icon: './icons/godot.png' },
+  'Unity':    { color: '#131313', icon: './icons/unity.png' },
+  'C#':       { color: '#5E438F', icon: './icons/csharp.png' },
+  'Python':   { color: '#1d692d', icon: './icons/python.png' },
+  'JS':       { color: '#f1e05a'},
+  'AI':       { color: '#373f50'},
+  'Custom Interface': { color: '#373f50'},
+  'Provided Interface': { color: '#373f50'},
+  'Custom Engine': { color: '#373f50'},
+  'Provided Engine': { color: '#373f50'},
 };
 
 
