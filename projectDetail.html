@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Details</title>
+  <script type="module">
+    // inject
+    (async () => {
+      const resp = await fetch('projectTemplates.html');
+      if (!resp.ok) throw new Error('Could not load templates');
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = await resp.text();
+      document.body.prepend(wrapper);
+
+      await import('./projectDetail.js');
+
+      // parse ?slug= from URL
+      const params = new URLSearchParams(location.search);
+      const slug = params.get('slug');
+      console.log('slug:', slug);
+      if (!slug) return;
+
+      //project data
+      const data = {
+        'zombie-ai': {
+          title: 'Zombie AI',
+          description: 'An AI which survives using a behaviour tree—fights zombies, has memory, uses items…',
+          thumbnail: './images/zombie.gif',
+          github: 'https://github.com/Howest-DAE-GD/zombiegame-exam-QuentinDemuynck-DAE',
+          itch: ''  
+        },
+        'beetlefield-blast': {
+          title: 'Beetlefield Blast',
+          description: 'A fast-paced party game where beetles…',
+          thumbnail: './images/beetlefield.png',
+          github: '',
+          itch: 'https://nuffuru.itch.io/beetlefield-blast'
+        },
+      };
+
+      const info = data[slug];
+      if (!info) return console.warn('Unknown project:', slug);
+
+      //render it
+      const detailEl = document.querySelector('project-detail');
+      Object.entries(info).forEach(([k,v]) => {
+        if (v) detailEl.setAttribute(k, v);
+      });
+    })();
+  </script>
+
+  <!-- Tailwind, AOS, etc -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <project-detail></project-detail>
+</body>
+</html>
