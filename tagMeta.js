@@ -1,0 +1,16 @@
+export const TAG_META = {
+  'C++':      { color: '#659AD2', icon: './icons/cpp.png' },
+  'GDScript': { color: '#6f97b8'},
+  'Godot':    { color: '#6f97b8', icon: './icons/godot.png' },
+  'Unity':    { color: '#131313', icon: './icons/unity.png' },
+  'C#':       { color: '#5E438F', icon: './icons/csharp.png' },
+  'Python':   { color: '#1d692d', icon: './icons/python.png' },
+  'Blueprints':{ color: '#3b2b77', icon: './icons/blueprint.png' },
+  'Unreal':{ color: '#3b2b77', icon: './icons/unreal.png'},
+  'JS':       { color: '#f1e05a'},
+  'AI':       { color: '#373f50'},
+  'Custom Interface': { color: '#373f50'},
+  'Provided Interface': { color: '#373f50'},
+  'Custom Engine': { color: '#373f50'},
+  'Provided Engine': { color: '#373f50'},
+};

@@ -11,8 +11,15 @@
 }
 </style>
 
+<style>
+  #particles-js {
+    pointer-events: none;
+  }
+</style>
 
-  
+  <!-- particles.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
 
    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
@@ -43,16 +50,20 @@
           github: 'https://github.com/Howest-DAE-GD/zombiegame-exam-QuentinDemuynck-DAE',
           itch: '',
           video: "https://www.youtube.com/watch?v=wtMAfMlXOIs&ab_channel=Bankzitters",
-          markdown: "./docs/zombie-ai.md"  
+          markdown: "./docs/zombie-ai.md",
+          year: "2025", 
+          tags: "C++, AI, Custom Interface, Provided Interface, Solo"
         },
         'beetlefield-blast': {
           title: 'Beetlefield Blast',
-          description: 'A fast-paced party game where beetles…',
+          description: 'A fast-paced party game, where beetles fight against each other with an explosive fruit!',
           thumbnail: './images/beetlefield.png',
           github: '',
           itch: 'https://nuffuru.itch.io/beetlefield-blast',
-          video: "https://www.youtube.com/watch?v=jNQXAC9IVRw&ab_channel=jawed",
-          markdown: "./docs/zombie-ai.md" 
+          video: "https://www.youtube.com/watch?v=1o8efRZxP0g&ab_channel=LouieVanNuffel",
+          markdown: "./docs/beetlefield.md" ,
+          year: "2025" ,
+          tags: "C#, Unity, Group"
         },
       };
 
@@ -82,6 +93,35 @@
 
 </head>
 <body class="bg-gray-900 text-white">
+  <div id="particles-js"
+     class="fixed inset-0 z-0 pointer-events-none"></div>
+
   <project-detail></project-detail>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+      "color": { "value": "#ffffff" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.8, "random": true },
+      "size": { "value": 4, "random": true },
+      "line_linked": { "enable": false },
+      "move": {
+        "enable": true,
+        "speed": 2,
+        "direction": "bottom",
+        "out_mode": "out"
+      }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": { "onhover": { "enable": false }, "onclick": { "enable": false } }
+    },
+    "retina_detect": true
+    });
+  });
+</script>
 </body>
 </html>

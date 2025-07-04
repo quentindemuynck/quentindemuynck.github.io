@@ -1,7 +1,8 @@
+import { TAG_META } from './tagMeta.js';
 
 class ProjectDetail extends HTMLElement {
   static get observedAttributes() {
-    return ['title','description','thumbnail','github','itch', 'markdown', 'video'];
+    return ['title','description','thumbnail','github','itch', 'markdown', 'video', 'tags', 'year'];
   }
   constructor() {
     super();
@@ -50,6 +51,36 @@ class ProjectDetail extends HTMLElement {
   }
 }
 
+
+     if (name === 'tags') {
+      const container = this.querySelector('.tag-list-detail');
+      container.innerHTML = '';
+      value
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean)
+        .forEach(tagText => {
+          const { color='#999', icon='' } = TAG_META[tagText] || {};
+          const span = document.createElement('span');
+
+          if (icon) {
+            const img = document.createElement('img');
+            img.src = icon;
+            img.alt = tagText;
+            img.className = 'w-4 h-4 inline-block mr-1 align-text-bottom';
+            span.appendChild(img);
+          }
+
+          span.appendChild(document.createTextNode(tagText));
+          span.style.backgroundColor = color + '33';   // 20% opacity
+          span.className = 'text-xs font-medium px-2 py-1 rounded-full';
+          container.appendChild(span);
+        });
+    }
+
+    if (name === 'year') {
+      this.querySelector('.project-year').textContent = value;
+    }
     
     if (name === 'markdown') {
       const mdContainer = root.querySelector('#markdown-content');
@@ -77,8 +108,7 @@ class ProjectDetail extends HTMLElement {
           .catch(err => console.error('Could not load markdown:', err));
       }
     }
-
-  }
+  } 
 }
 
 customElements.define('project-detail', ProjectDetail);
