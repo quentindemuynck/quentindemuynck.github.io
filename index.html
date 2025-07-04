@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-
-<style>
-
-  .hero-gradient {
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-gradient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url('./images/hero.gif') center/cover no-repeat;
-  transform: scale(1.05);         
-  z-index: -1;
-  transition: opacity 0.2s ease-out;
-}
-</style>
-
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quentin Demuynck – Game Developer Portfolio</title>
@@ -105,6 +85,7 @@
 
   <!-- Hero / Intro -->
   <section class="hero-gradient min-h-screen flex items-center justify-center px-6 pt-24">
+    <div id="particles-js" class="absolute inset-0 z-0"></div>
     <div class="text-center max-w-2xl">
       <h1 class="text-5xl md:text-6xl font-bold mb-4">Hi, I'm Quentin Demuynck</h1>
       <p class="text-xl md:text-2xl text-gray-400 mb-6">
@@ -117,7 +98,8 @@
 
   <!-- Projects Section -->
   <main class="px-6 py-12 space-y-12">
-    <section id="projects" class="space-y-12">
+    <section id="projects" class="w-full py-12 bg-gray-900">
+      <div class="max-w-screen-xl mx-auto px-6">
       <!-- Overall Projects Title -->
       <div class="text-center">
         <h2 class="text-4xl md:text-5xl font-bold mb-8">My Projects</h2>
@@ -177,6 +159,7 @@
           tags="Godot, GDScript, Group">
         </project-card>
       </projects-section>
+      </div>
     </section>
 
     <!-- About & Contact -->
@@ -189,7 +172,7 @@
       <p>
         <a href="mailto:quentibiew@gmail.com" class="text-indigo-400 hover:text-indigo-200">quentibiew@gmail.com</a>  
         •  
-        <a href="https://github.com/QuentinDemuynck-DAE" target="_blank" class="text-indigo-400 hover:text-indigo-200">GitHub</a>
+        <a href="https://github.com/quentindemuynck" target="_blank" class="text-indigo-400 hover:text-indigo-200">GitHub</a>
       </p>
     </section>
   </main>
@@ -220,6 +203,34 @@
       if (!projectsDropdown.classList.contains('hidden')) {
         projectsDropdown.classList.add('hidden');
       }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#ffffff",},
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.8, "random": true, "anim": { "enable": false } },
+        "size": { "value": 4, "random": true, "anim": { "enable": false } },
+        "line_linked": { "enable": false },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "bottom",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true }
+      },
+      "retina_detect": true
     });
   </script>
 
