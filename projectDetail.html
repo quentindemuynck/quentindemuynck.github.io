@@ -3,6 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Project Details</title>
+
+<style>
+  #markdown-content pre,
+  #markdown-content code {
+  text-align: left;
+}
+</style>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+
+   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
   <script type="module">
     // inject
     (async () => {
@@ -27,14 +41,18 @@
           description: 'An AI which survives using a behaviour tree—fights zombies, has memory, uses items…',
           thumbnail: './images/zombie.gif',
           github: 'https://github.com/Howest-DAE-GD/zombiegame-exam-QuentinDemuynck-DAE',
-          itch: ''  
+          itch: '',
+          video: "https://www.youtube.com/watch?v=wtMAfMlXOIs&ab_channel=Bankzitters",
+          markdown: "./docs/zombie-ai.md"  
         },
         'beetlefield-blast': {
           title: 'Beetlefield Blast',
           description: 'A fast-paced party game where beetles…',
           thumbnail: './images/beetlefield.png',
           github: '',
-          itch: 'https://nuffuru.itch.io/beetlefield-blast'
+          itch: 'https://nuffuru.itch.io/beetlefield-blast',
+          video: "https://www.youtube.com/watch?v=jNQXAC9IVRw&ab_channel=jawed",
+          markdown: "./docs/zombie-ai.md" 
         },
       };
 
@@ -53,6 +71,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+      <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark-dimmed.min.css"/>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+
 </head>
 <body class="bg-gray-900 text-white">
   <project-detail></project-detail>

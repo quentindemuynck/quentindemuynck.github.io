@@ -45,6 +45,23 @@
         <h1 class="text-4xl font-bold">Project Title</h1>
         <p class="text-gray-400">Full project description goes here…</p>
       </div>
+
+            <!-- Video preview container with 16:9 aspect ratio -->
+      <div id="video-container" class="w-full">
+        <div class="w-full aspect-video">
+          <iframe
+            id="video-iframe"
+            class="w-full h-full rounded-lg hidden"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Markdown content container -->
+      <div id="markdown-content" class="prose prose-invert mx-auto max-w-prose text-center"></div>
+
       <div class="flex space-x-4">
         <a id="github-link"
            class="hidden flex items-center px-4 py-2 border border-indigo-400 rounded hover:bg-indigo-400"
