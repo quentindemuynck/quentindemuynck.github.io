@@ -6,9 +6,31 @@
   <title>Quentin Demuynck – Game Developer Portfolio</title>
 
 
-  <script data-goatcounter="https://wanton.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-        
+  <!-- Put this BEFORE the GoatCounter script -->
+<script>
+  // 1) Disable the automatic onload ping
+  window.goatcounter = window.goatcounter || {};
+  window.goatcounter.no_onload = true;
+</script>
+
+<!-- Your normal GoatCounter tag -->
+<script data-goatcounter="https://YOURNAME.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+
+<!-- 2) Manually count with the query string included -->
+<script>
+  function countWithQuery() {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({
+        path: location.pathname + location.search,  // <-- keeps ?slug=...
+        title: document.title
+      });
+    }
+  }
+  // Fire on page load
+  window.addEventListener('load', countWithQuery);
+</script>
+
   <script type="module">
     window.addEventListener('DOMContentLoaded', async () => {
       // fetch + inject your templates.html
