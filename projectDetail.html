@@ -4,6 +4,30 @@
   <meta charset="UTF-8">
   <title>Project Details</title>
 
+  <!-- GoatCounter setup -->
+<script>
+  window.goatcounter = window.goatcounter || {};
+  // Disable auto pageview so we can include query string manually
+  window.goatcounter.no_onload = true;
+</script>
+
+<script data-goatcounter="https://wanton.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+
+<script>
+  // Send pageview including ?slug=...
+  function countWithQuery() {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({
+        path: location.pathname + location.search,
+        title: document.title
+      });
+    }
+  }
+  window.addEventListener('load', countWithQuery);
+</script>
+
+
 <style>
   #markdown-content pre,
   #markdown-content code {
