@@ -1,1 +1,0 @@
-Info in readme on GitHub.
