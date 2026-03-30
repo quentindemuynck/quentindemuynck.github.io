@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* default theme */
+:root {
+    --color-bg: #ffffff;
+    --color-text: #111827;
+    --color-card: #f3f4f6;
+    --color-primary: #2563eb;
+    --color-gradient-start: #1880a8;
+    --color-gradient-end: #020a1c;
+    --color-hover-link: #1b3e8c;
+    --color-link: #020a1c;
+}
+
+/* dark theme */
+.dark {
+    --color-bg: #0b1220;
+    --color-text: #f9fafb;
+    --color-card: #111827;
+    --color-primary: #60a5fa;
+    --color-gradient-start: #b4e2f4;
+    --color-gradient-end: #58588c;
+    --color-hover-link: #a0b7ed;
+    --color-link: #8290b8;
+}
+
+/* extra named themes */
+[data-theme="forest"] {
+    --color-bg: #0b1d16;
+    --color-text: #ecfdf5;
+    --color-card: #123126;
+    --color-primary: #22c55e;
+    --color-gradient-start: #1880a8;
+    --color-gradient-end: #020a1c;
+}
+
+[data-theme="sunset"] {
+    --color-bg: #1f172a;
+    --color-text: #faf5ff;
+    --color-card: #3b0764;
+    --color-primary: #f97316;
+    --color-gradient-start: #1880a8;
+    --color-gradient-end: #020a1c;
+}
+
+/* Tailwind mapping */
+@theme inline {
+    --color-background: var(--color-bg);
+    --color-foreground: var(--color-text);
+    --color-surface: var(--color-card);
+    --color-brand: var(--color-primary);
+    --color-gs: var(--color-gradient-start);
+    --color-ge: var(--color-gradient-end);
+    --color-link: var(--color-link);
+    --color-hover-link: var(--color-hover-link);
+}
