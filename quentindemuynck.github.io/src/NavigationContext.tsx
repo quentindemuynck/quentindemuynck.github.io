@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState } from "react";
 
-type Page = "home" | "about" | "projects" | "contact";
-type Transition = "slide-left" | "slide-right" | "fade" | "zoom";
+export type Page = "home" | "projects" | "about";
+export type Transition = "none" | "star-zoom" | "fade";
 
 type NavigationContextType = {
     currentPage: Page;
     previousPage: Page | null;
     transition: Transition;
-    goToPage: (page: Page) => void;
+    isTransitioning: boolean;
+    goToPage: (nextPage: Page) => void;
 };
 
 const NavigationContext = createContext<NavigationContextType | null>(null);
@@ -15,39 +16,53 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 export function NavigationProvider({ children }: { children: React.ReactNode }) {
     const [currentPage, setCurrentPage] = useState<Page>("home");
     const [previousPage, setPreviousPage] = useState<Page | null>(null);
-    const [transition, setTransition] = useState<Transition>("fade");
+    const [transition, setTransition] = useState<Transition>("none");
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
-    const transitionMap: Record<string, Transition> = {
-        "home-about": "slide-left",
-        "about-home": "slide-right",
-        "home-projects": "zoom",
-        "projects-home": "fade",
+    const getTransition = (from: Page, to: Page): Transition => {
+        if (from === "home") return "star-zoom";
+        return "fade";
     };
 
     const goToPage = (nextPage: Page) => {
-        if (nextPage === currentPage) return;
+        if (nextPage === currentPage || isTransitioning) return;
 
-        const key = `${currentPage}-${nextPage}`;
-        const animation = transitionMap[key] ?? "fade";
+        const nextTransition = getTransition(currentPage, nextPage);
 
         setPreviousPage(currentPage);
-        setTransition(animation);
-        setCurrentPage(nextPage);
+        setTransition(nextTransition);
+        setIsTransitioning(true);
+
+        const duration = nextTransition === "star-zoom" ? 2500 : 400;
+
+        window.setTimeout(() => {
+            setCurrentPage(nextPage);
+            setIsTransitioning(false);
+            setTransition("none");
+        }, duration);
     };
 
     return (
         <NavigationContext.Provider
-        value={{ currentPage, previousPage, transition, goToPage }}
-            >
-    {children}
-    </NavigationContext.Provider>
-        );
+            value={{
+                currentPage,
+                previousPage,
+                transition,
+                isTransitioning,
+                goToPage,
+            }}
+        >
+            {children}
+        </NavigationContext.Provider>
+    );
 }
 
 export function useNavigation() {
     const context = useContext(NavigationContext);
+
     if (!context) {
         throw new Error("useNavigation must be used inside NavigationProvider");
     }
+
     return context;
 }

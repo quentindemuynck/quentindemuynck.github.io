@@ -7,7 +7,7 @@ export default function NavigationBar() {
     
     return (
         <>
-            <section className="navbar flex items-center ">
+            <section className="fixed top-0 left-0 w-full z-50 navbar flex items-center h-20 px-6 ">
                 <NavigationBarButton 
                     className="navbar-title"
                     onClick={() => goToPage("home")}
@@ -16,8 +16,12 @@ export default function NavigationBar() {
                 </NavigationBarButton>
 
                 <div className="ml-auto flex gap-4">
-                    <NavigationBarButton>Projects</NavigationBarButton>
-                    <NavigationBarButton>About</NavigationBarButton>
+                    <NavigationBarButton
+                        onClick={() => goToPage("projects")}
+                    >Projects</NavigationBarButton>
+                    <NavigationBarButton
+                        onClick={() => goToPage("about")}
+                    >About</NavigationBarButton>
                 </div>
             </section>
         </>

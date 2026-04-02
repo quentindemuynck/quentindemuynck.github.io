@@ -2,11 +2,17 @@ import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { gsap } from "gsap";
 import Button from "../../components/Buttons/Button.tsx";
+import {useNavigation} from "../../NavigationContext.tsx";
 
 export default function Hero() {
     const mountRef = useRef<HTMLDivElement | null>(null)
     const titleRef = useRef(null);
     const contentRef = useRef(null);
+    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+    const positionAttrRef = useRef<THREE.BufferAttribute | null>(null);
+    const speedRef = useRef({ value: 0.08 });
+    const zoomStartedRef = useRef(false);
+    const { goToPage, transition, isTransitioning } = useNavigation();
     
 
     // three
@@ -15,6 +21,8 @@ export default function Hero() {
         if (!mount) return
 
         const scene = new THREE.Scene()
+        zoomStartedRef.current = false;
+        speedRef.current.value = 0.08; 
 
         const camera = new THREE.PerspectiveCamera(
             60,
@@ -23,6 +31,7 @@ export default function Hero() {
             100
         )
         camera.position.z = 12
+        cameraRef.current = camera;
 
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -219,6 +228,7 @@ export default function Hero() {
 
         const clock = new THREE.Clock()
         const positionAttr = geometry.getAttribute("position") as THREE.BufferAttribute
+        positionAttrRef.current = positionAttr;
         const alphaAttr = geometry.getAttribute("aAlpha") as THREE.BufferAttribute
 
         const animate = () => {
@@ -239,7 +249,7 @@ export default function Hero() {
             for (let i = 0; i < particlesCount; i++) {
                 const i3 = i * 3
 
-                positionAttr.array[i3 + 2] += 0.08
+                positionAttr.array[i3 + 2] += speedRef.current.value
                 alphaAttr.array[i] = Math.min(1, alphaAttr.array[i] + 0.02)
 
                 if (positionAttr.array[i3 + 2] > camera.position.z + 6) {
@@ -324,6 +334,75 @@ export default function Hero() {
             }
         );
     }, []);
+    
+    //Transition
+    useEffect(() => {
+        if (transition !== "star-zoom") return;
+        if (zoomStartedRef.current) return;
+
+        const camera = cameraRef.current;
+        const positionAttr = positionAttrRef.current;
+
+        if (!camera || !positionAttr) return;
+
+        zoomStartedRef.current = true;
+
+        const positions = positionAttr.array as Float32Array;
+        const starCount = positions.length / 3;
+
+        let chosenIndex = Math.floor(Math.random() * starCount);
+
+        for (let tries = 0; tries < 20; tries++) {
+            const testIndex = Math.floor(Math.random() * starCount);
+            const x = positions[testIndex * 3];
+            const y = positions[testIndex * 3 + 1];
+
+            if (Math.abs(x) < 6 && Math.abs(y) < 4) {
+                chosenIndex = testIndex;
+                break;
+            }
+        }
+
+        const x = positions[chosenIndex * 3];
+        const y = positions[chosenIndex * 3 + 1];
+        const z = positions[chosenIndex * 3 + 2];
+
+        const tl = gsap.timeline();
+
+        tl.to(speedRef.current, {
+            value: 0,
+            duration: 0.2,
+            ease: "power2.out",
+        })
+            .to(
+                camera.position,
+                {
+                    x,
+                    y,
+                    z: Math.max(z + 1.2, 1.5),
+                    duration: 2,
+                    onComplete: () => {
+                       
+                    },
+                    ease: "power4.in",
+                },
+                0
+            )
+            .to(
+                contentRef.current,
+                {
+                    opacity: 0,
+                    x: -200,
+                    duration: 0.45,
+                    ease: "power2.out",
+                },
+                0
+            );
+
+        return () => {
+            tl.kill();
+        };
+    }, [transition]);
 
     return (
         <section className="hero-section">
@@ -351,8 +430,12 @@ export default function Hero() {
                 </p>
 
                 <div className="hero-actions">
-                    <Button variant={"primary"}>Projects</Button>
-                    <Button variant={"secondary"}>About me </Button>
+                    <Button variant={"primary"} 
+                            onClick={() => goToPage("projects")}
+                    >Projects</Button>
+                    <Button variant={"secondary"}
+                            onClick={() => goToPage("about")}
+                    >About me </Button>
                 </div>
             </div>
         </section>
