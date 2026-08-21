@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useCameraRig } from '../context/CameraRigContext.jsx'
+import { useNavTransition } from '../context/NavTransitionContext.jsx'
 
 const DEST_PATH = { home: '/', projects: '/projects', about: '/about' }
 
@@ -41,6 +42,7 @@ export function useStarNavigate() {
   const navigate = useNavigate()
   const location = useLocation()
   const cameraRigRef = useCameraRig()
+  const { setLeaving } = useNavTransition()
 
   return useCallback(
     (dest) => {
@@ -60,14 +62,26 @@ export function useStarNavigate() {
         return
       }
 
+      // The outgoing view starts its fast exit right away, on click — the
+      // route swap (and therefore when the new view mounts) still waits
+      // for the camera animation's midpoint below, so the old view isn't
+      // stuck on screen for the whole (often 1-2s) camera travel time.
+      setLeaving(true)
+
       if (dest === 'home') {
-        rig.zoomOutToAmbient({ onMidpoint: () => navigate(path) })
+        rig.zoomOutToAmbient({
+          onMidpoint: () => {
+            setLeaving(false)
+            navigate(path)
+          },
+        })
         return
       }
 
       if (from === 'home' || from === null) {
         rig.zoomToStar(dest, {
           onMidpoint: (colorHex) => {
+            setLeaving(false)
             triggerArrivalFlash(colorHex)
             navigate(path)
           },
@@ -79,11 +93,12 @@ export function useStarNavigate() {
       // return-to-hub in between.
       rig.panTo(dest, {
         onMidpoint: (colorHex) => {
+          setLeaving(false)
           triggerArrivalFlash(colorHex)
           navigate(path)
         },
       })
     },
-    [navigate, location.pathname, cameraRigRef],
+    [navigate, location.pathname, cameraRigRef, setLeaving],
   )
 }

@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion'
 import { viewVariants } from '../motion/viewTransition.js'
+import { useNavTransition } from '../context/NavTransitionContext.jsx'
 
 function Home() {
+  const { leaving } = useNavTransition()
   return (
     <motion.section
       className="view view-home"
       variants={viewVariants}
       initial="initial"
-      animate="animate"
+      animate={leaving ? 'exit' : 'animate'}
       exit="exit"
     >
       <div className="hero-copy">

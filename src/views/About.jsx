@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion'
 import { viewVariants } from '../motion/viewTransition.js'
+import { useNavTransition } from '../context/NavTransitionContext.jsx'
 
 function About() {
+  const { leaving } = useNavTransition()
   return (
     <motion.section
       className="view view-about"
       variants={viewVariants}
       initial="initial"
-      animate="animate"
+      animate={leaving ? 'exit' : 'animate'}
       exit="exit"
     >
       <h2 className="view-heading" tabIndex={-1}>
