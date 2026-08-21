@@ -7,7 +7,14 @@ const AMBIENT_LOOKAT = new THREE.Vector3(0, 0, 0)
 // How close the camera ends up to a named star when "zoomed in" — small
 // enough that the star fills most of the frame (the bloom-hides-the-seam
 // trick), without actually clipping through it.
-const APPROACH_DISTANCE = 0.4
+const APPROACH_DISTANCE = 0.15
+// Max scale/emissive the target star reaches at full zoom — big enough that
+// its sphere genuinely fills the viewport at APPROACH_DISTANCE, rather than
+// just appearing as a bright circle with visible background around it.
+const MAX_ZOOM_SCALE = 7
+const MAX_ZOOM_EMISSIVE = 9
+const MAX_PAN_SCALE = 5
+const MAX_PAN_EMISSIVE = 9
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
@@ -145,6 +152,9 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
             camera.position.copy(toPos)
             camera.lookAt(starPos)
             currentLook.current.copy(starPos)
+            // no animation to grow it here, so show it at full size directly
+            star.scale.setScalar(MAX_ZOOM_SCALE)
+            if (star.material) star.material.emissiveIntensity = MAX_ZOOM_EMISSIVE
             restingNavId.current = navId
           }
         }
@@ -185,12 +195,12 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       const prevStar = a.prevNavId ? starRefs.current[a.prevNavId] : null
       const nextStar = starRefs.current[a.targetNavId]
       if (prevStar?.material) {
-        prevStar.material.emissiveIntensity = 1.4 + (1 - eased) * 3
-        prevStar.scale.setScalar(1 + (1 - eased) * 1.4)
+        prevStar.material.emissiveIntensity = (1 - eased) * MAX_PAN_EMISSIVE
+        prevStar.scale.setScalar((1 - eased) * MAX_PAN_SCALE)
       }
       if (nextStar?.material) {
-        nextStar.material.emissiveIntensity = 1.4 + eased * 3
-        nextStar.scale.setScalar(1 + eased * 1.4)
+        nextStar.material.emissiveIntensity = eased * MAX_PAN_EMISSIVE
+        nextStar.scale.setScalar(eased * MAX_PAN_SCALE)
       }
     } else {
       camera.position.lerpVectors(a.fromPos, a.toPos, eased)
@@ -203,8 +213,8 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
         if (star?.material) {
           const growing = a.kind === 'zoomIn'
           const factor = growing ? eased : 1 - eased
-          star.material.emissiveIntensity = 1.4 + factor * 5
-          star.scale.setScalar(1 + factor * 2.2)
+          star.material.emissiveIntensity = factor * MAX_ZOOM_EMISSIVE
+          star.scale.setScalar(factor * MAX_ZOOM_SCALE)
         }
       }
     }

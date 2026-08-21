@@ -1,7 +1,11 @@
 // Repo the /dev editor reads from and commits to via the GitHub Contents API.
 export const REPO_OWNER = 'quentindemuynck'
 export const REPO_NAME = 'quentindemuynck.github.io'
-export const REPO_BRANCH = 'main'
+// Defaults to 'main' since that's what GitHub Pages actually deploys from —
+// override locally by creating a git-ignored .env.local with
+// VITE_DEV_BRANCH=<branch> (e.g. new-portfolio) to test against a branch
+// that actually has data/projects.json before it's merged to main.
+export const REPO_BRANCH = import.meta.env.VITE_DEV_BRANCH || 'main'
 
 // Source-tree paths (NOT the built dist/ output) — the Contents API edits
 // the repo directly, and Vite copies public/ to dist/'s root at build time.

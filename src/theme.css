@@ -49,14 +49,15 @@ a:hover {
   outline-offset: 2px;
 }
 
-.view-heading {
-  outline-offset: 6px;
-}
-
+/* Headings get focus programmatically after each route change (App.jsx) so
+   screen readers announce the new page — but a visible ring on every click-
+   through reads as a distracting box, especially on Firefox's more eager
+   focus-visible heuristic for non-interactive elements. Keep the focus
+   move, drop the visible ring; :focus-visible elsewhere (nav, cards, forms)
+   is untouched. */
 .view-heading:focus-visible,
 .view-heading:focus {
-  outline: 2px solid var(--accent-primary);
-  border-radius: 4px;
+  outline: none;
 }
 
 .app-shell {

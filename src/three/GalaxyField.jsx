@@ -2,8 +2,8 @@ import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const STAR_COUNT = 2600
-const GALAXY_RADIUS = 85
+const STAR_COUNT = 4200
+const GALAXY_RADIUS = 68
 const ARM_COUNT = 3
 const ARM_TWIST = 2.4 // spiral tightness
 const DISK_TILT_X = THREE.MathUtils.degToRad(26)
