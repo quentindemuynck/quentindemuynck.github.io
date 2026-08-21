@@ -26,6 +26,11 @@ const MAX_PAN_EMISSIVE = 6
 const ZOOM_IN_DURATION = { base: 1000, perUnit: 25, min: 1100, max: 2200 }
 const ZOOM_OUT_DURATION = { base: 800, perUnit: 20, min: 900, max: 1800 }
 const PAN_DURATION = { base: 800, perUnit: 20, min: 900, max: 1700 }
+// How long the resting star takes to fade itself back out after arrival —
+// it used to just stay lit forever, which looked fine when it filled the
+// whole frame but reads as a stray leftover circle now that it settles at a
+// fixed, moderate size.
+const SETTLE_DURATION = 450
 
 function distanceAwareDuration(distance, { base, perUnit, min, max }) {
   return Math.min(Math.max(base + distance * perUnit, min), max)
@@ -63,7 +68,19 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
     return '#' + picked.color.getHexString()
   }
 
-  function startAnimation({ kind, toPos, toLook, duration, midpointT = 0.72, targetNavId = null, colorHex = null, onMidpoint, onComplete }) {
+  function startAnimation({
+    kind,
+    toPos,
+    toLook,
+    duration,
+    midpointT = 0.72,
+    targetNavId = null,
+    colorHex = null,
+    fromStarScale = null,
+    fromStarEmissive = null,
+    onMidpoint,
+    onComplete,
+  }) {
     anim.current = {
       kind,
       startTime: performance.now(),
@@ -76,6 +93,8 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       toLook: toLook.clone(),
       targetNavId,
       colorHex,
+      fromStarScale,
+      fromStarEmissive,
       onMidpoint,
       onComplete,
     }
@@ -133,6 +152,11 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       zoomOutToAmbient({ onMidpoint, onComplete } = {}) {
         const toPos = new THREE.Vector3(...AMBIENT_CAMERA_POSITION)
         const distance = camera.position.distanceTo(toPos)
+        // Fade from wherever the resting star's brightness/size actually is
+        // right now (it may already be mid-settle, or fully faded, or still
+        // fully lit if the user navigated away fast) rather than assuming a
+        // fixed starting point — avoids a pop back to full brightness.
+        const restingStar = restingNavId.current ? starRefs.current[restingNavId.current] : null
         startAnimation({
           kind: 'zoomOut',
           toPos,
@@ -140,6 +164,8 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
           duration: distanceAwareDuration(distance, ZOOM_OUT_DURATION),
           midpointT: 0.5,
           targetNavId: restingNavId.current,
+          fromStarScale: restingStar ? restingStar.scale.x : null,
+          fromStarEmissive: restingStar?.material?.emissiveIntensity ?? null,
           onMidpoint,
           onComplete: () => {
             restingNavId.current = null
@@ -168,6 +194,12 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
         outwardDir.normalize()
         const dipPos = midPos.clone().add(outwardDir.multiplyScalar(Math.max(distance * 0.35, 3)))
 
+        // Same as zoomOutToAmbient: fade the outgoing star from whatever its
+        // actual current brightness/size is, not a fixed assumed starting
+        // point, so an already-settled (or mid-settle) star doesn't pop.
+        const prevNavId = restingNavId.current
+        const prevStar = prevNavId ? starRefs.current[prevNavId] : null
+
         anim.current = {
           kind: 'pan',
           startTime: performance.now(),
@@ -181,7 +213,9 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
           toLook: starPos,
           targetNavId: navId,
           colorHex,
-          prevNavId: restingNavId.current,
+          prevNavId,
+          fromPrevScale: prevStar ? prevStar.scale.x : null,
+          fromPrevEmissive: prevStar?.material?.emissiveIntensity ?? null,
           onMidpoint,
           onComplete: () => {
             restingNavId.current = navId
@@ -206,9 +240,9 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
             camera.position.copy(toPos)
             camera.lookAt(starPos)
             currentLook.current.copy(starPos)
-            // no animation to grow it here, so show it at full size directly
-            star.scale.setScalar(MAX_ZOOM_SCALE)
-            if (star.material) star.material.emissiveIntensity = MAX_ZOOM_EMISSIVE
+            // Reduced motion is instant/animation-free by design — the star
+            // stays at its default hidden state instead of popping to full
+            // brightness with nothing to fade it back out afterward.
             restingNavId.current = navId
           }
         }
@@ -229,7 +263,17 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
     const t = Math.min(elapsed / a.duration, 1)
     const eased = easeInOutCubic(t)
 
-    if (a.kind === 'pan') {
+    if (a.kind === 'settle') {
+      // Camera has already arrived and isn't moving — just fade the resting
+      // star's brightness/size back down from wherever it actually was when
+      // this started, so it stops sitting in the background indefinitely.
+      const star = a.targetNavId ? starRefs.current[a.targetNavId] : null
+      if (star?.material) {
+        const factor = 1 - eased
+        star.material.emissiveIntensity = factor * a.fromStarEmissive
+        star.scale.setScalar(factor * a.fromStarScale)
+      }
+    } else if (a.kind === 'pan') {
       // quadratic bezier through the dip point for a lateral pan with a
       // brief pull-back, rather than a straight lerp between the two stars
       const p0 = a.fromPos
@@ -245,12 +289,16 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       camera.lookAt(lookPoint)
       currentLook.current.copy(lookPoint)
 
-      // fade the outgoing star's glow down and the incoming star's glow up
+      // fade the outgoing star's glow down (from its actual current
+      // brightness/size, not an assumed fixed one) and the incoming star's
+      // glow up
       const prevStar = a.prevNavId ? starRefs.current[a.prevNavId] : null
       const nextStar = starRefs.current[a.targetNavId]
       if (prevStar?.material) {
-        prevStar.material.emissiveIntensity = (1 - eased) * MAX_PAN_EMISSIVE
-        prevStar.scale.setScalar((1 - eased) * MAX_PAN_SCALE)
+        const prevScaleBasis = a.fromPrevScale ?? MAX_PAN_SCALE
+        const prevEmissiveBasis = a.fromPrevEmissive ?? MAX_PAN_EMISSIVE
+        prevStar.material.emissiveIntensity = (1 - eased) * prevEmissiveBasis
+        prevStar.scale.setScalar((1 - eased) * prevScaleBasis)
       }
       if (nextStar?.material) {
         nextStar.material.emissiveIntensity = eased * MAX_PAN_EMISSIVE
@@ -267,8 +315,13 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
         if (star?.material) {
           const growing = a.kind === 'zoomIn'
           const factor = growing ? eased : 1 - eased
-          star.material.emissiveIntensity = factor * MAX_ZOOM_EMISSIVE
-          star.scale.setScalar(factor * MAX_ZOOM_SCALE)
+          // Growing (zoomIn) always builds toward the fixed max; shrinking
+          // (zoomOut) fades from wherever the star's brightness/size
+          // actually was, not an assumed fixed starting point.
+          const emissiveBasis = growing ? MAX_ZOOM_EMISSIVE : (a.fromStarEmissive ?? MAX_ZOOM_EMISSIVE)
+          const scaleBasis = growing ? MAX_ZOOM_SCALE : (a.fromStarScale ?? MAX_ZOOM_SCALE)
+          star.material.emissiveIntensity = factor * emissiveBasis
+          star.scale.setScalar(factor * scaleBasis)
         }
       }
     }
@@ -279,7 +332,21 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
     }
     if (t >= 1) {
       a.onComplete?.()
-      anim.current = null
+      // zoomIn/pan hand off into a short settle fade so the resting star
+      // doesn't stay lit in the background forever; everything else just ends.
+      const star = a.targetNavId ? starRefs.current[a.targetNavId] : null
+      if ((a.kind === 'zoomIn' || a.kind === 'pan') && star?.material) {
+        anim.current = {
+          kind: 'settle',
+          startTime: performance.now(),
+          duration: SETTLE_DURATION,
+          targetNavId: a.targetNavId,
+          fromStarScale: star.scale.x,
+          fromStarEmissive: star.material.emissiveIntensity,
+        }
+      } else {
+        anim.current = null
+      }
     }
   })
 
