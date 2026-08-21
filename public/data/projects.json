@@ -150,7 +150,7 @@
       "thumbnail": "",
       "year": 2026,
       "status": "completed",
-      "visible": true,
+      "visible": false,
       "tags": [],
       "links": {
         "github": "",
