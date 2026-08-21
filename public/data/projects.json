@@ -111,7 +111,7 @@
       "thumbnail": "images/vulkan.png",
       "year": 2025,
       "status": "completed",
-      "visible": false,
+      "visible": true,
       "tags": [
         "C++",
         "Solo"
