@@ -1,8 +1,9 @@
 import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stars, PerspectiveCamera } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 import { NAMED_STARS, AMBIENT_CAMERA_POSITION } from './starData.js'
-import NamedStar from './NamedStar.jsx'
+import TargetStar from './TargetStar.jsx'
+import GalaxyField from './GalaxyField.jsx'
 import CameraRig from './CameraRig.jsx'
 
 /**
@@ -13,15 +14,16 @@ import CameraRig from './CameraRig.jsx'
 function Starfield({ cameraRigRef }) {
   const starRefs = useRef({})
   const restingNavIdRef = useRef(null)
+  const galaxyFieldRef = useRef(null)
 
   return (
     <div className="starfield-canvas" aria-hidden="true">
       <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
         <PerspectiveCamera makeDefault position={AMBIENT_CAMERA_POSITION} fov={60} />
         <ambientLight intensity={0.7} />
-        <Stars radius={90} depth={60} count={2500} factor={3} saturation={0} fade speed={0.5} />
+        <GalaxyField ref={galaxyFieldRef} />
         {Object.entries(NAMED_STARS).map(([navId, star]) => (
-          <NamedStar
+          <TargetStar
             key={navId}
             navId={navId}
             position={star.position}
@@ -32,7 +34,12 @@ function Starfield({ cameraRigRef }) {
             }}
           />
         ))}
-        <CameraRig ref={cameraRigRef} starRefs={starRefs} restingNavIdRef={restingNavIdRef} />
+        <CameraRig
+          ref={cameraRigRef}
+          starRefs={starRefs}
+          restingNavIdRef={restingNavIdRef}
+          galaxyFieldRef={galaxyFieldRef}
+        />
       </Canvas>
     </div>
   )

@@ -18,11 +18,26 @@ function easeInOutCubic(t) {
  * Canvas (so it can use useFrame/useThree) but is driven from outside via
  * a forwarded ref, since navigation is decided by the DOM/router layer.
  */
-const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef }, ref) {
+const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, galaxyFieldRef }, ref) {
   const { camera } = useThree()
   const anim = useRef(null)
   const currentLook = useRef(AMBIENT_LOOKAT.clone())
   const restingNavId = restingNavIdRef
+
+  // Pulls a genuinely arbitrary star out of the live galaxy field and
+  // re-homes the given destination's target mesh to it (position + color),
+  // so every navigation zooms into a different, differently-colored star
+  // instead of a fixed pre-placed marker.
+  function repickTargetStar(navId) {
+    const star = starRefs.current[navId]
+    const picked = galaxyFieldRef?.current?.getRandomStar()
+    if (!star || !picked) return
+    star.position.copy(picked.position)
+    if (star.material) {
+      star.material.color.copy(picked.color)
+      star.material.emissive.copy(picked.color)
+    }
+  }
 
   function startAnimation({ kind, toPos, toLook, duration, midpointT = 0.72, targetNavId = null, onMidpoint, onComplete }) {
     anim.current = {
@@ -52,6 +67,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef }, r
     ref,
     () => ({
       zoomToStar(navId, { onMidpoint, onComplete } = {}) {
+        repickTargetStar(navId)
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
@@ -87,6 +103,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef }, r
       },
 
       panTo(navId, { onMidpoint, onComplete } = {}) {
+        repickTargetStar(navId)
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
@@ -120,6 +137,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef }, r
           currentLook.current.copy(AMBIENT_LOOKAT)
           restingNavId.current = null
         } else {
+          repickTargetStar(navId)
           const star = starRefs.current[navId]
           if (star) {
             const starPos = star.position.clone()
@@ -137,7 +155,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef }, r
         return restingNavId.current
       },
     }),
-    [camera, starRefs],
+    [camera, starRefs, galaxyFieldRef],
   )
 
   useFrame(() => {
