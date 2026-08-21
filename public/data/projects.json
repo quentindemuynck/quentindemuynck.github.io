@@ -8,7 +8,13 @@
       "year": 2025,
       "status": "completed",
       "visible": true,
-      "tags": ["C++", "AI", "Custom Interface", "Provided Interface", "Solo"],
+      "tags": [
+        "C++",
+        "AI",
+        "Custom Interface",
+        "Provided Interface",
+        "Solo"
+      ],
       "links": {
         "github": "https://github.com/quentindemuynck/zombie-ai/",
         "itch": "",
@@ -24,7 +30,11 @@
       "year": 2025,
       "status": "completed",
       "visible": true,
-      "tags": ["C#", "Unity", "Group"],
+      "tags": [
+        "C#",
+        "Unity",
+        "Group"
+      ],
       "links": {
         "github": "",
         "itch": "https://nuffuru.itch.io/beetlefield-blast",
@@ -40,7 +50,12 @@
       "year": 2025,
       "status": "completed",
       "visible": true,
-      "tags": ["Python", "AI", "Research", "Solo"],
+      "tags": [
+        "Python",
+        "AI",
+        "Research",
+        "Solo"
+      ],
       "links": {
         "github": "https://github.com/quentindemuynck/Qlearning-research",
         "itch": "",
@@ -56,7 +71,11 @@
       "year": 2024,
       "status": "completed",
       "visible": true,
-      "tags": ["C#", "Unity", "Solo"],
+      "tags": [
+        "C#",
+        "Unity",
+        "Solo"
+      ],
       "links": {
         "github": "https://github.com/quentindemuynck/PackingPanic",
         "itch": "",
@@ -72,7 +91,12 @@
       "year": 2025,
       "status": "completed",
       "visible": true,
-      "tags": ["C++", "Blueprints", "Unreal", "Solo"],
+      "tags": [
+        "C++",
+        "Blueprints",
+        "Unreal",
+        "Solo"
+      ],
       "links": {
         "github": "https://github.com/quentindemuynck/Sharcitect",
         "itch": "",
@@ -87,8 +111,11 @@
       "thumbnail": "images/vulkan.png",
       "year": 2025,
       "status": "completed",
-      "visible": true,
-      "tags": ["C++", "Solo"],
+      "visible": false,
+      "tags": [
+        "C++",
+        "Solo"
+      ],
       "links": {
         "github": "https://github.com/quentindemuynck/vulkan",
         "itch": "",
@@ -104,7 +131,11 @@
       "year": 2025,
       "status": "completed",
       "visible": false,
-      "tags": ["Godot", "GDScript", "Group"],
+      "tags": [
+        "Godot",
+        "GDScript",
+        "Group"
+      ],
       "links": {
         "github": "https://github.com/Daxanius/ironfang-expedition",
         "itch": "",
