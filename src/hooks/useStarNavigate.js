@@ -20,12 +20,19 @@ function prefersReducedMotion() {
 // landing reads as actually stopping on it rather than just seeing it
 // nearby. Fires right at the animation's midpoint, before the destination
 // route mounts underneath it. No-op if there's no picked color (e.g. the
-// zoom-out-to-home case, which has no single associated star).
-function triggerArrivalFlash(colorHex) {
+// zoom-out-to-home case, which has no single associated star). `screenPos`
+// (from CameraRig's projection of the target star) places the glow's origin
+// wherever the star actually is on screen — a pan can land the star well
+// off-center, and a flash that always originates dead-center looked wrong
+// for those.
+function triggerArrivalFlash(colorHex, screenPos) {
   if (!colorHex || typeof document === 'undefined') return
   const el = document.getElementById('arrival-flash')
   if (!el) return
+  const { x = 50, y = 50 } = screenPos || {}
   el.style.setProperty('--arrival-color', colorHex)
+  el.style.setProperty('--arrival-x', `${x}%`)
+  el.style.setProperty('--arrival-y', `${y}%`)
   el.classList.remove('arrival-flash-active')
   // eslint-disable-next-line no-unused-expressions
   el.offsetWidth // force reflow so re-adding the class restarts the animation
@@ -80,9 +87,9 @@ export function useStarNavigate() {
 
       if (from === 'home' || from === null) {
         rig.zoomToStar(dest, {
-          onMidpoint: (colorHex) => {
+          onMidpoint: (colorHex, screenPos) => {
             setLeaving(false)
-            triggerArrivalFlash(colorHex)
+            triggerArrivalFlash(colorHex, screenPos)
             navigate(path)
           },
         })
@@ -92,9 +99,9 @@ export function useStarNavigate() {
       // Direct cross-section nav (Projects <-> About): lighter pan, no
       // return-to-hub in between.
       rig.panTo(dest, {
-        onMidpoint: (colorHex) => {
+        onMidpoint: (colorHex, screenPos) => {
           setLeaving(false)
-          triggerArrivalFlash(colorHex)
+          triggerArrivalFlash(colorHex, screenPos)
           navigate(path)
         },
       })

@@ -85,8 +85,15 @@ a:hover {
   pointer-events: none;
   /* A radial glow blended with `screen` rather than a flat, fully-opaque
      color slab — reads as light washing in from the star rather than the
-     whole screen being replaced/strobed, which was harsh on the eyes. */
-  background: radial-gradient(circle at center, var(--arrival-color, transparent) 0%, transparent 70%);
+     whole screen being replaced/strobed, which was harsh on the eyes.
+     --arrival-x/--arrival-y (set from the target star's actual projected
+     screen position) place its origin where the star really is, since a
+     pan can land it well off-center — a fixed "center" looked wrong then. */
+  background: radial-gradient(
+    circle at var(--arrival-x, 50%) var(--arrival-y, 50%),
+    var(--arrival-color, transparent) 0%,
+    transparent 70%
+  );
   opacity: 0;
   mix-blend-mode: screen;
 }

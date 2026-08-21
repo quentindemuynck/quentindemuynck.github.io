@@ -86,6 +86,22 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
     return starPos.clone().sub(dir.multiplyScalar(APPROACH_DISTANCE))
   }
 
+  // Projects a target star's current world position to viewport percentages
+  // (0-100, CSS-style with y growing downward), so the arrival-flash overlay
+  // can originate from wherever the star actually is on screen at the
+  // midpoint — not always dead center, which looks wrong for a lateral pan
+  // where the star can still be well off to one side at that point.
+  function screenPositionOf(navId) {
+    const star = navId ? starRefs.current[navId] : null
+    if (!star) return { x: 50, y: 50 }
+    camera.updateMatrixWorld()
+    const ndc = star.position.clone().project(camera)
+    return {
+      x: THREE.MathUtils.clamp((ndc.x * 0.5 + 0.5) * 100, 0, 100),
+      y: THREE.MathUtils.clamp((1 - (ndc.y * 0.5 + 0.5)) * 100, 0, 100),
+    }
+  }
+
   useImperativeHandle(
     ref,
     () => ({
@@ -257,7 +273,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
 
     if (!a.midpointFired && t >= a.midpointT) {
       a.midpointFired = true
-      a.onMidpoint?.(a.colorHex)
+      a.onMidpoint?.(a.colorHex, screenPositionOf(a.targetNavId))
     }
     if (t >= 1) {
       a.onComplete?.()
