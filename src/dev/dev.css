@@ -1,0 +1,331 @@
+.dev-gate {
+  max-width: 32rem;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+}
+
+.dev-gate h1 {
+  margin-top: 0;
+}
+
+.dev-gate-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.dev-gate form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.dev-gate label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dev-gate input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+}
+
+.dev-gate button {
+  margin-top: 0.5rem;
+}
+
+.dev-error {
+  color: #ff8a8a;
+  font-size: 0.85rem;
+}
+
+.dev-status {
+  color: var(--text-muted);
+  padding: 2rem 0;
+}
+
+.dev-editor {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.dev-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.dev-editor button.link-like {
+  background: none;
+  border: none;
+  color: var(--accent-primary);
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+.dev-layout {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.dev-project-list {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.dev-new-button {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem;
+  background: var(--bg-panel-raised);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 0.5rem;
+  color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.dev-project-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dev-project-list li {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+}
+
+.dev-editor button.dev-project-row {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.dev-editor button.dev-project-row:hover {
+  border-color: var(--border-subtle);
+}
+
+.dev-editor button.dev-project-row.active {
+  background: var(--bg-panel-raised);
+  border-color: var(--accent-primary);
+}
+
+.dev-editor button.dev-project-row.hidden-project {
+  color: var(--text-faint);
+}
+
+.hidden-badge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dev-editor button.eye-toggle {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 0.4rem;
+  border-radius: 0.4rem;
+}
+
+.dev-editor button.eye-toggle:hover {
+  background: var(--bg-panel-raised);
+  border-color: var(--border-subtle);
+}
+
+.dev-form-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.project-form input,
+.project-form textarea,
+.project-form select {
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.project-form input:disabled {
+  opacity: 0.6;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.visibility-toggle {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.6rem !important;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  font-size: 0.95rem !important;
+  color: var(--text-primary) !important;
+}
+
+.visibility-toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.thumb-preview {
+  max-width: 12rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.thumb-preview img {
+  width: 100%;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.form-actions .danger {
+  background: transparent;
+  border: 1px solid #ff8a8a;
+  color: #ff8a8a;
+}
+
+.save-confirm {
+  color: #8ae0a3;
+  font-size: 0.85rem;
+}
+
+.markdown-editor-wrap {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.5rem;
+}
+
+.markdown-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.markdown-editor-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.markdown-editor-pane label,
+.markdown-preview-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.markdown-editor textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.markdown-preview {
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.dev-gate button,
+.dev-editor button {
+  font: inherit;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--accent-primary);
+  background: var(--accent-primary);
+  color: #05070f;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dev-gate button:disabled,
+.dev-editor button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dev-editor button.dev-new-button,
+.dev-editor .form-actions button[type='button']:not(.danger) {
+  background: var(--bg-panel-raised);
+  color: var(--accent-primary);
+}
+
+@media (max-width: 800px) {
+  .dev-layout {
+    grid-template-columns: 1fr;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "projects": [
+    {
+      "slug": "zombie-ai",
+      "title": "Zombie AI",
+      "description": "An AI which survives using a behaviour tree. It fights against zombies, has memory, uses items and explores the map.",
+      "thumbnail": "images/zombie.gif",
+      "year": 2025,
+      "status": "completed",
+      "visible": true,
+      "tags": ["C++", "AI", "Custom Interface", "Provided Interface", "Solo"],
+      "links": {
+        "github": "https://github.com/quentindemuynck/zombie-ai/",
+        "itch": "",
+        "video": "https://youtu.be/wBeV0sGcZRA"
+      },
+      "markdown": "docs/zombie-ai.md"
+    },
+    {
+      "slug": "beetlefield-blast",
+      "title": "Beetlefield Blast",
+      "description": "A fast-paced party game, where beetles fight against each other with an explosive fruit!",
+      "thumbnail": "images/beetlefield.png",
+      "year": 2025,
+      "status": "completed",
+      "visible": true,
+      "tags": ["C#", "Unity", "Group"],
+      "links": {
+        "github": "",
+        "itch": "https://nuffuru.itch.io/beetlefield-blast",
+        "video": "https://www.youtube.com/watch?v=1o8efRZxP0g"
+      },
+      "markdown": "docs/beetlefield.md"
+    },
+    {
+      "slug": "qlearning",
+      "title": "Q-learning",
+      "description": "A small research project about Q-learning.",
+      "thumbnail": "images/q_learning.gif",
+      "year": 2025,
+      "status": "completed",
+      "visible": true,
+      "tags": ["Python", "AI", "Research", "Solo"],
+      "links": {
+        "github": "https://github.com/quentindemuynck/Qlearning-research",
+        "itch": "",
+        "video": ""
+      },
+      "markdown": "docs/qlearning.md"
+    },
+    {
+      "slug": "packing-panic",
+      "title": "Packing Panic!",
+      "description": "A solo fast-paced puzzle game. Where you have to store tiles in time and give the customers their requests in time.",
+      "thumbnail": "images/packing_panic.png",
+      "year": 2024,
+      "status": "completed",
+      "visible": true,
+      "tags": ["C#", "Unity", "Solo"],
+      "links": {
+        "github": "https://github.com/quentindemuynck/PackingPanic",
+        "itch": "",
+        "video": "https://youtu.be/v1LE4w1lnr0"
+      },
+      "markdown": "docs/packing_panic.md"
+    },
+    {
+      "slug": "sharcitect",
+      "title": "Sharcitect",
+      "description": "A round based tower defense, where you can place shields to reroute or block enemies.",
+      "thumbnail": "images/architect_of_shields.png",
+      "year": 2025,
+      "status": "completed",
+      "visible": true,
+      "tags": ["C++", "Blueprints", "Unreal", "Solo"],
+      "links": {
+        "github": "https://github.com/quentindemuynck/Sharcitect",
+        "itch": "",
+        "video": "https://youtu.be/_wloJLVJmEw"
+      },
+      "markdown": "docs/sharcitect.md"
+    },
+    {
+      "slug": "vulkan-renderer",
+      "title": "Vulkan Renderer",
+      "description": "A real time renderer which I made using Vulkan.",
+      "thumbnail": "images/vulkan.png",
+      "year": 2025,
+      "status": "completed",
+      "visible": true,
+      "tags": ["C++", "Solo"],
+      "links": {
+        "github": "https://github.com/quentindemuynck/vulkan",
+        "itch": "",
+        "video": "https://youtu.be/F7bdCs6rXq8"
+      },
+      "markdown": "docs/vulkan.md"
+    },
+    {
+      "slug": "ironfang",
+      "title": "Ironfang Expedition",
+      "description": "A fast-paced 2D co-op game where you and your friends drill to the bottom of the map. Explore caves and avoid meteor showers.",
+      "thumbnail": "images/ironfang.png",
+      "year": 2025,
+      "status": "completed",
+      "visible": false,
+      "tags": ["Godot", "GDScript", "Group"],
+      "links": {
+        "github": "https://github.com/Daxanius/ironfang-expedition",
+        "itch": "",
+        "video": "https://youtu.be/RXtvLvqJl5M"
+      },
+      "markdown": "docs/ironfang.md"
+    }
+  ]
+}
