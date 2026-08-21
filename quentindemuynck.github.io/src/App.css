@@ -1,0 +1,147 @@
+@import "./themes/theme.css";
+
+body {
+    background: radial-gradient(
+            circle at top left,
+            rgba(255, 255, 255, 0.05),
+            transparent 35%
+    ),
+    var(--color-bg);
+    color: var(--color-text);
+}
+
+.title-card {
+    background-color: var(--color-bg);
+}
+
+.navbar 
+{
+    position: fixed;
+    background-color: var(--color-card);
+    width: 100%;
+    padding: 1rem;
+    opacity: 1;
+    z-index: 999;
+}
+
+.navbar-title
+{
+    font-size: 24px;
+    justify-self: left;
+    font-weight: bold;
+}
+
+.hero-section {
+    position: relative;
+    min-height: calc(100vh - 5rem);
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.hero-eyebrow {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-link);
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.hero-title {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.5;
+    margin: 0;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+}
+
+.hero-title span {
+    display: inline-block;
+    background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    margin-top: 1.75rem;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 680px;
+    color: var(--color-text);
+    opacity: 0.92;
+}
+
+.hero-description a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.hero-description a:hover {
+    color: var(--color-hover-link);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.25rem;
+}
+
+.hero-bg-base {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: transparent;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-background canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 2rem 2rem 2rem;
+    background: color-mix(in srgb, var(--color-card) 70%, transparent);
+    border-radius: 1.2rem;
+}
+
+@media (max-width: 640px) {
+    .hero-section {
+        padding: 4rem 1.25rem;
+    }
+
+    .hero-description {
+        font-size: 1.02rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero-button {
+        width: 100%;
+    }
+}
