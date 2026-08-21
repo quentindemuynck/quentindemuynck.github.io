@@ -142,6 +142,22 @@
         "video": "https://youtu.be/RXtvLvqJl5M"
       },
       "markdown": "docs/ironfang.md"
+    },
+    {
+      "slug": "dikke-test",
+      "title": "Dikke test",
+      "description": "",
+      "thumbnail": "",
+      "year": 2026,
+      "status": "completed",
+      "visible": false,
+      "tags": [],
+      "links": {
+        "github": "",
+        "itch": "",
+        "video": ""
+      },
+      "markdown": "docs/dikke-test.md"
     }
   ]
 }
