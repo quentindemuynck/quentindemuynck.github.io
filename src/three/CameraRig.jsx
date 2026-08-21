@@ -16,12 +16,6 @@ const MAX_ZOOM_SCALE = 10
 const MAX_ZOOM_EMISSIVE = 9
 const MAX_PAN_SCALE = 7
 const MAX_PAN_EMISSIVE = 9
-// How close (in screen-percent distance from dead center) the target star
-// needs to be before a zoomIn/pan reveals its destination — waiting on the
-// camera's actual look direction rather than a fixed fraction of the
-// animation's duration, since a lerp'd look path doesn't line up with a
-// fixed time the same way on every hop (especially pans).
-const CENTER_THRESHOLD = 14
 
 // Fixed durations made short hops feel instant and long hops feel rushed,
 // since the arbitrary-star pick makes travel distance vary hugely between
@@ -277,27 +271,9 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       }
     }
 
-    if (!a.midpointFired) {
-      // zoomIn/pan: don't reveal on a fixed time fraction — wait until the
-      // target star has actually swung near the center of the screen (with
-      // midpointT still acting as an earliest-possible floor, and t>=1 as a
-      // guaranteed fallback so navigation can never get stuck not firing).
-      // zoomOut has no destination star to center on, so it stays time-based.
-      const usesCenterGate = a.kind === 'zoomIn' || a.kind === 'pan'
-      let fire = false
-      if (usesCenterGate) {
-        if (t >= a.midpointT) {
-          const pos = screenPositionOf(a.targetNavId)
-          const dist = Math.hypot(pos.x - 50, pos.y - 50)
-          fire = dist <= CENTER_THRESHOLD || t >= 1
-        }
-      } else {
-        fire = t >= a.midpointT
-      }
-      if (fire) {
-        a.midpointFired = true
-        a.onMidpoint?.(a.colorHex, screenPositionOf(a.targetNavId))
-      }
+    if (!a.midpointFired && t >= a.midpointT) {
+      a.midpointFired = true
+      a.onMidpoint?.(a.colorHex, screenPositionOf(a.targetNavId))
     }
     if (t >= 1) {
       a.onComplete?.()
