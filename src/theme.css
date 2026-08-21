@@ -83,17 +83,24 @@ a:hover {
   inset: 0;
   z-index: 40;
   pointer-events: none;
-  background: var(--arrival-color, transparent);
+  /* A radial glow blended with `screen` rather than a flat, fully-opaque
+     color slab — reads as light washing in from the star rather than the
+     whole screen being replaced/strobed, which was harsh on the eyes. */
+  background: radial-gradient(circle at center, var(--arrival-color, transparent) 0%, transparent 70%);
   opacity: 0;
+  mix-blend-mode: screen;
 }
 
 #arrival-flash.arrival-flash-active {
-  animation: arrival-flash 850ms ease-out forwards;
+  animation: arrival-flash 900ms ease-out forwards;
 }
 
 @keyframes arrival-flash {
   0% {
-    opacity: 0.85;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.45;
   }
   100% {
     opacity: 0;
