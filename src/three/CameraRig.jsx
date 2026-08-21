@@ -2,6 +2,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { AMBIENT_CAMERA_POSITION } from './starData.js'
+import { SPHERE_CENTER_Z } from './GalaxyField.jsx'
 
 const AMBIENT_LOOKAT = new THREE.Vector3(0, 0, 0)
 // How close the camera ends up to a named star when "zoomed in" — small
@@ -15,6 +16,18 @@ const MAX_ZOOM_SCALE = 7
 const MAX_ZOOM_EMISSIVE = 9
 const MAX_PAN_SCALE = 5
 const MAX_PAN_EMISSIVE = 9
+
+// Fixed durations made short hops feel instant and long hops feel rushed,
+// since the arbitrary-star pick makes travel distance vary hugely between
+// navigations. Duration now scales with actual distance instead, clamped to
+// a sane range per animation kind.
+const ZOOM_IN_DURATION = { base: 1000, perUnit: 25, min: 1100, max: 2200 }
+const ZOOM_OUT_DURATION = { base: 800, perUnit: 20, min: 900, max: 1800 }
+const PAN_DURATION = { base: 800, perUnit: 20, min: 900, max: 1700 }
+
+function distanceAwareDuration(distance, { base, perUnit, min, max }) {
+  return Math.min(Math.max(base + distance * perUnit, min), max)
+}
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
@@ -78,12 +91,14 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
+        const toPos = approachPositionFor(starPos)
+        const distance = camera.position.distanceTo(toPos)
         startAnimation({
           kind: 'zoomIn',
-          toPos: approachPositionFor(starPos),
+          toPos,
           toLook: starPos,
-          duration: 1100,
-          midpointT: 0.72,
+          duration: distanceAwareDuration(distance, ZOOM_IN_DURATION),
+          midpointT: 0.8,
           targetNavId: navId,
           onMidpoint,
           onComplete: () => {
@@ -94,11 +109,13 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       },
 
       zoomOutToAmbient({ onMidpoint, onComplete } = {}) {
+        const toPos = new THREE.Vector3(...AMBIENT_CAMERA_POSITION)
+        const distance = camera.position.distanceTo(toPos)
         startAnimation({
           kind: 'zoomOut',
-          toPos: new THREE.Vector3(...AMBIENT_CAMERA_POSITION),
+          toPos,
           toLook: AMBIENT_LOOKAT.clone(),
-          duration: 900,
+          duration: distanceAwareDuration(distance, ZOOM_OUT_DURATION),
           midpointT: 0.5,
           targetNavId: restingNavId.current,
           onMidpoint,
@@ -114,17 +131,31 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
-        const dipPos = new THREE.Vector3(0, -1.2, 5.5) // brief pull-back at the midpoint
+        const fromPos = camera.position.clone()
+        const toPos = approachPositionFor(starPos)
+        const distance = fromPos.distanceTo(toPos)
+
+        // Pull-back point for the arc, derived from the actual endpoints
+        // rather than a fixed world-space point — otherwise the dip looks
+        // arbitrary depending on which two stars happened to get picked.
+        // Pull the midpoint away from the galaxy center, scaled with the
+        // hop's own distance (with a floor so short pans still get an arc).
+        const midPos = fromPos.clone().lerp(toPos, 0.5)
+        const outwardDir = midPos.clone().sub(new THREE.Vector3(0, 0, SPHERE_CENTER_Z))
+        if (outwardDir.lengthSq() < 1e-6) outwardDir.set(0, -1, 1)
+        outwardDir.normalize()
+        const dipPos = midPos.clone().add(outwardDir.multiplyScalar(Math.max(distance * 0.35, 3)))
+
         anim.current = {
           kind: 'pan',
           startTime: performance.now(),
-          duration: 600,
-          midpointT: 0.5,
+          duration: distanceAwareDuration(distance, PAN_DURATION),
+          midpointT: 0.8,
           midpointFired: false,
-          fromPos: camera.position.clone(),
+          fromPos,
           fromLook: currentLook.current.clone(),
           dipPos,
-          toPos: approachPositionFor(starPos),
+          toPos,
           toLook: starPos,
           targetNavId: navId,
           prevNavId: restingNavId.current,

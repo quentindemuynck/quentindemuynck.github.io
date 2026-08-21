@@ -8,10 +8,10 @@ function Projects() {
   return (
     <motion.section
       className="view view-projects"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, scale: 0.94, y: 14 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0.4 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <h2 className="view-heading" tabIndex={-1}>
         My Projects

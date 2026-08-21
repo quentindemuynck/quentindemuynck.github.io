@@ -136,13 +136,13 @@ a:hover {
   max-width: 72rem;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
-  animation: view-fade-in 500ms ease both;
+  animation: view-fade-in 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes view-fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(14px) scale(0.94);
   }
   to {
     opacity: 1;

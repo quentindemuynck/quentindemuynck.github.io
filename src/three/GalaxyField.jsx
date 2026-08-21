@@ -2,14 +2,16 @@ import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const STAR_COUNT = 4200
-const GALAXY_RADIUS = 68
-const ARM_COUNT = 3
-const ARM_TWIST = 2.4 // spiral tightness
-const DISK_TILT_X = THREE.MathUtils.degToRad(26)
-const DISK_THICKNESS = 15
-const Z_OFFSET = -18 // push the bulk of the field out in front of the camera
-const ROTATE_SPEED = 0.02 // rad/sec — slow, continuous "living galaxy" drift
+const STAR_COUNT = 5200
+const SPHERE_RADIUS = 42
+// keep the bulk of the cloud in front of the camera. Exported since
+// CameraRig uses it as the "galaxy center" reference point when computing
+// the pan transition's pull-back direction.
+export const SPHERE_CENTER_Z = -20
+const CORE_BIAS = 0.45 // < 1/3 = pushed outward, > 1/3 = pulled toward center; mild core boost
+const ROTATE_SPEED = 0.02 // rad/sec — slow, continuous "living galaxy" drift. Safe on a
+// roughly isotropic sphere: rotating it doesn't sweep any directional structure around,
+// so (unlike the earlier tilted-disk-with-arms version) no side ever visibly empties out.
 const BASE_POINT_SIZE = 4.5
 
 // Mostly the site's blues/violets, with cyan/white/pink sprinkled in for
@@ -100,33 +102,31 @@ function buildStarData() {
   const sizes = new Float32Array(STAR_COUNT)
   const phases = new Float32Array(STAR_COUNT)
   const speeds = new Float32Array(STAR_COUNT)
-  const cosT = Math.cos(DISK_TILT_X)
-  const sinT = Math.sin(DISK_TILT_X)
   const color = new THREE.Color()
 
   for (let i = 0; i < STAR_COUNT; i++) {
-    const armOffset = ((i % ARM_COUNT) / ARM_COUNT) * Math.PI * 2
-    const rand = Math.random()
-    // flatter exponent than a tight core-biased distribution — spreads
-    // stars across the whole disk instead of collapsing them toward center
-    const r = Math.pow(rand, 0.8) * GALAXY_RADIUS
-    const jitterR = r + (Math.random() - 0.5) * GALAXY_RADIUS * 0.2
-    const theta = armOffset + r * (ARM_TWIST / GALAXY_RADIUS) + (Math.random() - 0.5) * 0.7
-    const x = jitterR * Math.cos(theta)
-    const zLocal = jitterR * Math.sin(theta)
-    const y = (Math.random() - 0.5) * DISK_THICKNESS * (1 - (r / GALAXY_RADIUS) * 0.6)
+    // uniform random direction on the unit sphere (Marsaglia-ish: pick z
+    // uniformly, then a uniform angle around it) — no axis/plane bias, so
+    // there's no directional structure for rotation to sweep around later
+    const u = Math.random() * 2 - 1
+    const theta = Math.random() * Math.PI * 2
+    const s = Math.sqrt(1 - u * u)
+    const dirX = s * Math.cos(theta)
+    const dirY = s * Math.sin(theta)
+    const dirZ = u
 
-    // tilt the disk around X so it reads as a 3D galaxy, not a flat poster
-    const y2 = y * cosT - zLocal * sinT
-    const z2 = y * sinT + zLocal * cosT + Z_OFFSET
+    // soft core bias: true uniform-volume sampling would use rand^(1/3);
+    // a slightly higher exponent pulls a bit more mass toward the center
+    // for a brighter core without collapsing into a tight clump
+    const r = Math.pow(Math.random(), CORE_BIAS) * SPHERE_RADIUS
 
-    positions[i * 3] = x
-    positions[i * 3 + 1] = y2
-    positions[i * 3 + 2] = z2
+    positions[i * 3] = dirX * r
+    positions[i * 3 + 1] = dirY * r
+    positions[i * 3 + 2] = dirZ * r + SPHERE_CENTER_Z
 
     // brighter stars near the core for a glowing center, on top of the
     // palette color (still clamped so it doesn't blow out to pure white)
-    const coreBoost = 1 - Math.min(r / GALAXY_RADIUS, 1)
+    const coreBoost = 1 - Math.min(r / SPHERE_RADIUS, 1)
     const brightness = 0.85 + coreBoost * 0.9
     color.set(pickPaletteColor())
     baseColors[i * 3] = Math.min(color.r * brightness, 1)
@@ -144,8 +144,8 @@ function buildStarData() {
 }
 
 /**
- * The ambient "living galaxy" background: a tilted, spiral-biased field of
- * glowing, multi-colored, variably-sized points that slowly rotates and
+ * The ambient "living galaxy" background: a volumetric sphere of glowing,
+ * multi-colored, variably-sized points that slowly rotates and
  * flickers (both size and brightness, driven per-frame by a single uTime
  * uniform — cheap, GPU-side). Also exposes getRandomStar() so navigation can
  * zoom into an arbitrary star actually pulled from this field, rather than a
