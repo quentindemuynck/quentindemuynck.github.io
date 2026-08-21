@@ -5,17 +5,19 @@ import { AMBIENT_CAMERA_POSITION } from './starData.js'
 import { SPHERE_CENTER_Z } from './GalaxyField.jsx'
 
 const AMBIENT_LOOKAT = new THREE.Vector3(0, 0, 0)
-// How close the camera ends up to a named star when "zoomed in" — small
-// enough that the star fills most of the frame (the bloom-hides-the-seam
-// trick), without actually clipping through it.
-const APPROACH_DISTANCE = 0.08
-// Max scale/emissive the target star reaches at full zoom — big enough that
-// its sphere genuinely fills the viewport at APPROACH_DISTANCE, rather than
-// just appearing as a bright circle with visible background around it.
-const MAX_ZOOM_SCALE = 10
-const MAX_ZOOM_EMISSIVE = 9
-const MAX_PAN_SCALE = 7
-const MAX_PAN_EMISSIVE = 9
+// How far the camera stops from a named star when "zoomed in" — a fixed,
+// moderate distance so the star reads as a discrete glowing object held
+// dead center in frame (camera.lookAt always centers it, whichever star was
+// picked or whichever direction you approached from), rather than the
+// camera passing into/through it.
+const APPROACH_DISTANCE = 2.2
+// Scale/emissive the target star reaches at full zoom — sized to read
+// clearly as a glowing sphere at APPROACH_DISTANCE without filling/
+// swallowing the frame.
+const MAX_ZOOM_SCALE = 3
+const MAX_ZOOM_EMISSIVE = 6
+const MAX_PAN_SCALE = 2.2
+const MAX_PAN_EMISSIVE = 6
 
 // Fixed durations made short hops feel instant and long hops feel rushed,
 // since the arbitrary-star pick makes travel distance vary hugely between
