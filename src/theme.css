@@ -78,6 +78,35 @@ a:hover {
   display: block;
 }
 
+#arrival-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: var(--arrival-color, transparent);
+  opacity: 0;
+}
+
+#arrival-flash.arrival-flash-active {
+  animation: arrival-flash 850ms ease-out forwards;
+}
+
+@keyframes arrival-flash {
+  0% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #arrival-flash.arrival-flash-active {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 .site-nav {
   position: fixed;
   inset: 0 0 auto 0;
@@ -166,10 +195,13 @@ a:hover {
   box-shadow: 0 0 0 1px var(--border-subtle);
 }
 
-/* Projects and ProjectDetail animate their own entrance/exit via
-   framer-motion (needed for the shared card-expand transition), so they
-   opt out of the plain CSS entrance used by Home/About. */
+/* All four views now animate their own entrance/exit via framer-motion
+   (shared fast-out/slow-in variants for Home/Projects/About, a bespoke
+   layoutId-driven transition for ProjectDetail), so none of them use the
+   plain CSS entrance keyframe anymore. */
+.view-home,
 .view-projects,
+.view-about,
 .view-project-detail {
   animation: none;
 }

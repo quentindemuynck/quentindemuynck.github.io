@@ -8,13 +8,13 @@ const AMBIENT_LOOKAT = new THREE.Vector3(0, 0, 0)
 // How close the camera ends up to a named star when "zoomed in" — small
 // enough that the star fills most of the frame (the bloom-hides-the-seam
 // trick), without actually clipping through it.
-const APPROACH_DISTANCE = 0.15
+const APPROACH_DISTANCE = 0.08
 // Max scale/emissive the target star reaches at full zoom — big enough that
 // its sphere genuinely fills the viewport at APPROACH_DISTANCE, rather than
 // just appearing as a bright circle with visible background around it.
-const MAX_ZOOM_SCALE = 7
+const MAX_ZOOM_SCALE = 10
 const MAX_ZOOM_EMISSIVE = 9
-const MAX_PAN_SCALE = 5
+const MAX_PAN_SCALE = 7
 const MAX_PAN_EMISSIVE = 9
 
 // Fixed durations made short hops feel instant and long hops feel rushed,
@@ -47,19 +47,21 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
   // Pulls a genuinely arbitrary star out of the live galaxy field and
   // re-homes the given destination's target mesh to it (position + color),
   // so every navigation zooms into a different, differently-colored star
-  // instead of a fixed pre-placed marker.
+  // instead of a fixed pre-placed marker. Returns the picked color's hex
+  // string so callers can pass it along to the arrival-flash overlay.
   function repickTargetStar(navId) {
     const star = starRefs.current[navId]
     const picked = galaxyFieldRef?.current?.getRandomStar()
-    if (!star || !picked) return
+    if (!star || !picked) return null
     star.position.copy(picked.position)
     if (star.material) {
       star.material.color.copy(picked.color)
       star.material.emissive.copy(picked.color)
     }
+    return '#' + picked.color.getHexString()
   }
 
-  function startAnimation({ kind, toPos, toLook, duration, midpointT = 0.72, targetNavId = null, onMidpoint, onComplete }) {
+  function startAnimation({ kind, toPos, toLook, duration, midpointT = 0.72, targetNavId = null, colorHex = null, onMidpoint, onComplete }) {
     anim.current = {
       kind,
       startTime: performance.now(),
@@ -71,6 +73,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       toPos: toPos.clone(),
       toLook: toLook.clone(),
       targetNavId,
+      colorHex,
       onMidpoint,
       onComplete,
     }
@@ -87,7 +90,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
     ref,
     () => ({
       zoomToStar(navId, { onMidpoint, onComplete } = {}) {
-        repickTargetStar(navId)
+        const colorHex = repickTargetStar(navId)
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
@@ -100,6 +103,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
           duration: distanceAwareDuration(distance, ZOOM_IN_DURATION),
           midpointT: 0.8,
           targetNavId: navId,
+          colorHex,
           onMidpoint,
           onComplete: () => {
             restingNavId.current = navId
@@ -127,7 +131,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
       },
 
       panTo(navId, { onMidpoint, onComplete } = {}) {
-        repickTargetStar(navId)
+        const colorHex = repickTargetStar(navId)
         const star = starRefs.current[navId]
         if (!star) return
         const starPos = star.position.clone()
@@ -158,6 +162,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
           toPos,
           toLook: starPos,
           targetNavId: navId,
+          colorHex,
           prevNavId: restingNavId.current,
           onMidpoint,
           onComplete: () => {
@@ -252,7 +257,7 @@ const CameraRig = forwardRef(function CameraRig({ starRefs, restingNavIdRef, gal
 
     if (!a.midpointFired && t >= a.midpointT) {
       a.midpointFired = true
-      a.onMidpoint?.()
+      a.onMidpoint?.(a.colorHex)
     }
     if (t >= 1) {
       a.onComplete?.()

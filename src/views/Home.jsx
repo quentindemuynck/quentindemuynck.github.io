@@ -1,6 +1,15 @@
+import { motion } from 'framer-motion'
+import { viewVariants } from '../motion/viewTransition.js'
+
 function Home() {
   return (
-    <section className="view view-home">
+    <motion.section
+      className="view view-home"
+      variants={viewVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <div className="hero-copy">
         <h1 className="view-heading" tabIndex={-1}>
           Hi, I'm Quentin Demuynck
@@ -12,7 +21,7 @@ function Home() {
         <p className="hero-line">Languages &amp; Tools: C++, C#, JavaScript, Python, Lua, GDScript, …</p>
         <p className="hero-line">Engines: Unreal Engine, Unity, Godot, School-built engines, Custom engine</p>
       </div>
-    </section>
+    </motion.section>
   )
 }
 

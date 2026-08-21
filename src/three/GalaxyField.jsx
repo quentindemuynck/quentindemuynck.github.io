@@ -38,19 +38,41 @@ function pickPaletteColor() {
 }
 
 let glowTexture = null
+// A 4-point sparkle (bright core + thin cross spikes) rather than a plain
+// soft circle — reads as an actual twinkling star instead of a glowing dot.
 function getGlowTexture() {
   if (glowTexture) return glowTexture
-  const size = 64
+  const size = 128
+  const cx = size / 2
+  const cy = size / 2
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
   const ctx = canvas.getContext('2d')
-  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
-  gradient.addColorStop(0, 'rgba(255,255,255,1)')
-  gradient.addColorStop(0.4, 'rgba(255,255,255,0.55)')
-  gradient.addColorStop(1, 'rgba(255,255,255,0)')
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, size, size)
+
+  const vSpike = ctx.createLinearGradient(cx, 0, cx, size)
+  vSpike.addColorStop(0, 'rgba(255,255,255,0)')
+  vSpike.addColorStop(0.5, 'rgba(255,255,255,0.85)')
+  vSpike.addColorStop(1, 'rgba(255,255,255,0)')
+  ctx.fillStyle = vSpike
+  ctx.fillRect(cx - 2, 0, 4, size)
+
+  const hSpike = ctx.createLinearGradient(0, cy, size, cy)
+  hSpike.addColorStop(0, 'rgba(255,255,255,0)')
+  hSpike.addColorStop(0.5, 'rgba(255,255,255,0.85)')
+  hSpike.addColorStop(1, 'rgba(255,255,255,0)')
+  ctx.fillStyle = hSpike
+  ctx.fillRect(0, cy - 2, size, 4)
+
+  const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.2)
+  core.addColorStop(0, 'rgba(255,255,255,1)')
+  core.addColorStop(0.5, 'rgba(255,255,255,0.75)')
+  core.addColorStop(1, 'rgba(255,255,255,0)')
+  ctx.fillStyle = core
+  ctx.beginPath()
+  ctx.arc(cx, cy, size * 0.2, 0, Math.PI * 2)
+  ctx.fill()
+
   glowTexture = new THREE.CanvasTexture(canvas)
   return glowTexture
 }

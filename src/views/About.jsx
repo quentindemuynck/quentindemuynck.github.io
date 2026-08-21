@@ -1,6 +1,15 @@
+import { motion } from 'framer-motion'
+import { viewVariants } from '../motion/viewTransition.js'
+
 function About() {
   return (
-    <section className="view view-about">
+    <motion.section
+      className="view view-about"
+      variants={viewVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <h2 className="view-heading" tabIndex={-1}>
         About Me
       </h2>
@@ -29,7 +38,7 @@ function About() {
           Resume
         </a>
       </p>
-    </section>
+    </motion.section>
   )
 }
 

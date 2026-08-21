@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useProjects } from '../hooks/useProjects.js'
 import ProjectCard from '../components/ProjectCard.jsx'
+import { viewVariants } from '../motion/viewTransition.js'
 
 function Projects() {
   const { projects, error, loading } = useProjects()
@@ -8,10 +9,10 @@ function Projects() {
   return (
     <motion.section
       className="view view-projects"
-      initial={{ opacity: 0, scale: 0.94, y: 14 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0.4 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      variants={viewVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       <h2 className="view-heading" tabIndex={-1}>
         My Projects

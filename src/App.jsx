@@ -27,6 +27,7 @@ function App() {
         <main className="app-main">
           <AppRoutes />
         </main>
+        <div id="arrival-flash" aria-hidden="true" />
       </div>
     </CameraRigContext.Provider>
   )
