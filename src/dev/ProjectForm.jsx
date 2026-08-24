@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { uploadImage, GitHubApiError } from './githubApi.js'
 
 const BLANK_PROJECT = {
   slug: '',
@@ -9,7 +10,7 @@ const BLANK_PROJECT = {
   status: 'completed',
   visible: false,
   tags: [],
-  links: { github: '', itch: '', video: '' },
+  links: { github: '', itch: '', video: '', custom: [] },
   markdown: '',
 }
 
@@ -22,11 +23,19 @@ function slugify(title) {
 }
 
 /** Editable form for one project's fields, incl. the visibility toggle. */
-function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError }) {
-  const [form, setForm] = useState(() => ({ ...BLANK_PROJECT, ...project }))
+function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError, tags, onQuickAddTag, token }) {
+  const [form, setForm] = useState(() => ({
+    ...BLANK_PROJECT,
+    ...project,
+    links: { ...BLANK_PROJECT.links, ...project?.links },
+  }))
+  const [newTagName, setNewTagName] = useState('')
+  const [addingTag, setAddingTag] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   useEffect(() => {
-    setForm({ ...BLANK_PROJECT, ...project })
+    setForm({ ...BLANK_PROJECT, ...project, links: { ...BLANK_PROJECT.links, ...project?.links } })
   }, [project])
 
   function update(field, value) {
@@ -35,6 +44,59 @@ function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError }) {
 
   function updateLink(key, value) {
     setForm((f) => ({ ...f, links: { ...f.links, [key]: value } }))
+  }
+
+  function toggleTag(name) {
+    setForm((f) => ({
+      ...f,
+      tags: f.tags.includes(name) ? f.tags.filter((t) => t !== name) : [...f.tags, name],
+    }))
+  }
+
+  async function handleAddNewTag() {
+    const name = newTagName.trim()
+    if (!name) return
+    setAddingTag(true)
+    const ok = await onQuickAddTag(name)
+    setAddingTag(false)
+    if (ok) {
+      setForm((f) => ({ ...f, tags: f.tags.includes(name) ? f.tags : [...f.tags, name] }))
+      setNewTagName('')
+    }
+  }
+
+  function updateCustomLink(index, field, value) {
+    setForm((f) => ({
+      ...f,
+      links: {
+        ...f.links,
+        custom: f.links.custom.map((l, i) => (i === index ? { ...l, [field]: value } : l)),
+      },
+    }))
+  }
+
+  function addCustomLink() {
+    setForm((f) => ({ ...f, links: { ...f.links, custom: [...f.links.custom, { title: '', url: '' }] } }))
+  }
+
+  function removeCustomLink(index) {
+    setForm((f) => ({ ...f, links: { ...f.links, custom: f.links.custom.filter((_, i) => i !== index) } }))
+  }
+
+  async function handleThumbnailUpload(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setUploading(true)
+    setUploadError('')
+    try {
+      const path = await uploadImage(token, file, form.slug)
+      update('thumbnail', path)
+    } catch (err) {
+      setUploadError(err instanceof GitHubApiError ? err.message : 'Upload failed.')
+    } finally {
+      setUploading(false)
+    }
   }
 
   function handleTitleChange(value) {
@@ -52,6 +114,10 @@ function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError }) {
       ...form,
       year: Number(form.year) || new Date().getFullYear(),
       tags: form.tags.filter(Boolean),
+      links: {
+        ...form.links,
+        custom: form.links.custom.filter((l) => l.title.trim() && l.url.trim()),
+      },
     }
     onSave(cleaned)
   }
@@ -100,19 +166,44 @@ function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError }) {
         Thumbnail path (relative to /images/, e.g. images/foo.png)
         <input value={form.thumbnail} onChange={(e) => update('thumbnail', e.target.value)} />
       </label>
+      <label className="upload-label">
+        Or upload an image/gif
+        <input type="file" accept="image/*" onChange={handleThumbnailUpload} disabled={uploading} />
+      </label>
+      {uploading && <p className="dev-status">Uploading…</p>}
+      {uploadError && <p className="dev-error">{uploadError}</p>}
       {form.thumbnail && (
         <div className="thumb-preview">
           <img src={`/${form.thumbnail}`} alt="" onError={(e) => (e.currentTarget.style.opacity = 0.2)} />
         </div>
       )}
 
-      <label>
-        Tags (comma-separated)
-        <input
-          value={form.tags.join(', ')}
-          onChange={(e) => update('tags', e.target.value.split(',').map((t) => t.trim()))}
-        />
-      </label>
+      <div className="tag-picker">
+        <span className="tag-picker-label">Tags</span>
+        <div className="tag-picker-chips">
+          {tags.map((t) => (
+            <button
+              key={t.name}
+              type="button"
+              className={`tag-picker-chip ${form.tags.includes(t.name) ? 'selected' : ''}`}
+              style={{ backgroundColor: form.tags.includes(t.name) ? t.color : undefined }}
+              onClick={() => toggleTag(t.name)}
+            >
+              {t.name}
+            </button>
+          ))}
+        </div>
+        <div className="tag-picker-new">
+          <input
+            placeholder="New tag name"
+            value={newTagName}
+            onChange={(e) => setNewTagName(e.target.value)}
+          />
+          <button type="button" onClick={handleAddNewTag} disabled={!newTagName.trim() || addingTag}>
+            {addingTag ? 'Adding…' : '+ New tag'}
+          </button>
+        </div>
+      </div>
 
       <div className="form-row">
         <label>
@@ -128,6 +219,22 @@ function ProjectForm({ project, isNew, onSave, onDelete, saving, saveError }) {
         Video link (YouTube)
         <input value={form.links.video} onChange={(e) => updateLink('video', e.target.value)} />
       </label>
+
+      <div className="custom-links">
+        <span className="tag-picker-label">Custom links (shown as buttons, e.g. a website or Steam page)</span>
+        {form.links.custom.map((l, i) => (
+          <div className="form-row custom-link-row" key={i}>
+            <input placeholder="Title" value={l.title} onChange={(e) => updateCustomLink(i, 'title', e.target.value)} />
+            <input placeholder="URL" value={l.url} onChange={(e) => updateCustomLink(i, 'url', e.target.value)} />
+            <button type="button" className="danger" onClick={() => removeCustomLink(i)}>
+              Remove
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={addCustomLink}>
+          + Add link
+        </button>
+      </div>
 
       <label>
         Markdown path (relative to /docs/, e.g. docs/foo.md)

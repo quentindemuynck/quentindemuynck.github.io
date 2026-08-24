@@ -122,6 +122,11 @@ function ProjectDetail() {
               <img src="/icons/itch.png" alt="" aria-hidden="true" /> itch.io
             </a>
           )}
+          {(project.links.custom ?? []).map((link) => (
+            <a key={link.url} href={link.url} target="_blank" rel="noreferrer" className="link-button">
+              {link.title}
+            </a>
+          ))}
         </div>
 
         {embedUrl && (

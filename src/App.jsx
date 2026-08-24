@@ -5,6 +5,7 @@ import AppRoutes from './routes.jsx'
 import Starfield from './three/Starfield.jsx'
 import { CameraRigContext } from './context/CameraRigContext.jsx'
 import { NavTransitionContext } from './context/NavTransitionContext.jsx'
+import { TagsProvider } from './context/TagsContext.jsx'
 
 function App() {
   const cameraRigRef = useRef(null)
@@ -22,18 +23,20 @@ function App() {
   }, [location.pathname])
 
   return (
-    <CameraRigContext.Provider value={cameraRigRef}>
-      <NavTransitionContext.Provider value={{ leaving, setLeaving }}>
-        <div className="app-shell">
-          <Starfield cameraRigRef={cameraRigRef} />
-          <Nav />
-          <main className="app-main">
-            <AppRoutes />
-          </main>
-          <div id="arrival-flash" aria-hidden="true" />
-        </div>
-      </NavTransitionContext.Provider>
-    </CameraRigContext.Provider>
+    <TagsProvider>
+      <CameraRigContext.Provider value={cameraRigRef}>
+        <NavTransitionContext.Provider value={{ leaving, setLeaving }}>
+          <div className="app-shell">
+            <Starfield cameraRigRef={cameraRigRef} />
+            <Nav />
+            <main className="app-main">
+              <AppRoutes />
+            </main>
+            <div id="arrival-flash" aria-hidden="true" />
+          </div>
+        </NavTransitionContext.Provider>
+      </CameraRigContext.Provider>
+    </TagsProvider>
   )
 }
 

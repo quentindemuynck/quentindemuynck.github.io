@@ -102,3 +102,88 @@ export async function getProjectsFile(token) {
 export async function putProjectsFile(token, data, sha, message) {
   return putFile('public/data/projects.json', token, `${JSON.stringify(data, null, 2)}\n`, sha, message)
 }
+
+export async function getTagsFile(token) {
+  const { text, sha } = await getFile('public/data/tags.json', token)
+  return { data: text ? JSON.parse(text) : { tags: [] }, sha }
+}
+
+export async function putTagsFile(token, data, sha, message) {
+  return putFile('public/data/tags.json', token, `${JSON.stringify(data, null, 2)}\n`, sha, message)
+}
+
+/**
+ * Like getFile, but returns the raw base64 content instead of decoding it as
+ * UTF-8 text — decoding arbitrary binary (image) bytes as text can throw or
+ * mangle them. Used only to fetch an existing file's `sha` before overwriting
+ * it with a binary upload.
+ */
+async function getFileRaw(path, token) {
+  const res = await fetch(
+    `${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${REPO_BRANCH}`,
+    { headers: authHeaders(token) },
+  )
+  if (res.status === 404) return { sha: null }
+  if (!res.ok) {
+    throw new GitHubApiError(`Failed to read ${path} (status ${res.status}).`, res.status)
+  }
+  const data = await res.json()
+  return { sha: data.sha }
+}
+
+/** Writes a binary file (already base64-encoded) — same commit/409 semantics as putFile. */
+async function putBinaryFile(path, token, base64Content, sha, message) {
+  const res = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+    method: 'PUT',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      content: base64Content,
+      sha: sha ?? undefined,
+      branch: REPO_BRANCH,
+    }),
+  })
+  if (res.status === 409) {
+    throw new GitHubApiError('The file changed on GitHub since you loaded it. Try again.', 409)
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new GitHubApiError(body.message || `Failed to upload ${path} (status ${res.status}).`, res.status)
+  }
+  return res.json()
+}
+
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024 // 8MB — generous for a compressed gif/png, well inside API limits
+
+function sanitizeFileName(name) {
+  return name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/-+/g, '-')
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result.split(',', 2)[1])
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+/**
+ * Uploads an image to public/images/ and returns the relative path (no
+ * leading slash, matching how `thumbnail` is already stored/rendered) to
+ * store as the project's thumbnail.
+ */
+export async function uploadImage(token, file, slug) {
+  if (file.size > MAX_UPLOAD_BYTES) {
+    throw new GitHubApiError(
+      `That file is too big (${(file.size / 1024 / 1024).toFixed(1)}MB) — please compress it under 8MB first.`,
+    )
+  }
+  const namePart = sanitizeFileName(file.name)
+  const fileName = slug ? `${sanitizeFileName(slug)}-${namePart}` : `upload-${Date.now()}-${namePart}`
+  const repoPath = `public/images/${fileName}`
+  const base64Content = await readFileAsBase64(file)
+  const { sha } = await getFileRaw(repoPath, token)
+  await putBinaryFile(repoPath, token, base64Content, sha, `Upload thumbnail "${fileName}" via /dev editor`)
+  return `images/${fileName}`
+}

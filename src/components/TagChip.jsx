@@ -1,7 +1,8 @@
-import { TAG_META, DEFAULT_TAG_META } from '../data/tagMeta.js'
+import { useTagCatalog, tagMetaFor } from '../context/TagsContext.jsx'
 
 function TagChip({ tag }) {
-  const meta = TAG_META[tag] ?? DEFAULT_TAG_META
+  const { tagMap } = useTagCatalog()
+  const meta = tagMetaFor(tagMap, tag)
   return (
     <span className="tag-chip" style={{ backgroundColor: meta.color }}>
       {meta.icon && <img src={meta.icon} alt="" aria-hidden="true" />}

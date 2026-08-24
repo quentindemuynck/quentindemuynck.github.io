@@ -74,6 +74,30 @@
   text-decoration: underline;
 }
 
+.dev-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dev-tabs button {
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.6rem 0.2rem;
+  margin-right: 1rem;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.dev-tabs button.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-primary);
+}
+
 .dev-layout {
   display: grid;
   grid-template-columns: 18rem 1fr;
@@ -252,6 +276,100 @@
 .save-confirm {
   color: #8ae0a3;
   font-size: 0.85rem;
+}
+
+.upload-label input[type='file'] {
+  padding: 0.4rem;
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+}
+
+.tag-picker,
+.custom-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tag-picker-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.tag-picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.dev-editor button.tag-picker-chip {
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-weight: 400;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.dev-editor button.tag-picker-chip.selected {
+  color: var(--star-white);
+  border-color: transparent;
+}
+
+.tag-picker-new {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-picker-new input {
+  flex: 1;
+}
+
+.custom-link-row {
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+}
+
+.tag-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.tag-manager-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tag-manager-row {
+  display: grid;
+  grid-template-columns: auto 12rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag-manager-row input[type='color'] {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel-raised);
+}
+
+@media (max-width: 800px) {
+  .tag-manager-row {
+    grid-template-columns: auto 1fr;
+  }
+  .custom-link-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .markdown-editor-wrap {
