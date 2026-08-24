@@ -158,6 +158,28 @@
         "video": ""
       },
       "markdown": "docs/dikke-test.md"
+    },
+    {
+      "slug": "ober-bot",
+      "title": "Ober Bot",
+      "description": "A vibe coded discord bot that creates spotify playlists with AI.",
+      "thumbnail": "images/ober-bot-screenshot-2026-08-24-232403.png",
+      "year": 2026,
+      "status": "completed",
+      "visible": false,
+      "tags": [
+        "AI",
+        "Vibe Coded",
+        "C#",
+        "Utility"
+      ],
+      "links": {
+        "github": "https://github.com/quentindemuynck/ober-bot-spotify",
+        "itch": "",
+        "video": "https://www.youtube.com/embed/7KKybMBEeLU?si=_-n_SmbsK98q7_LJ",
+        "custom": []
+      },
+      "markdown": "docs/ober-bot.md"
     }
   ]
 }
