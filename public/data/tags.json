@@ -1,21 +1,84 @@
 {
   "tags": [
-    { "name": "C++", "color": "#659AD2", "icon": "/icons/cpp.png" },
-    { "name": "GDScript", "color": "#6f97b8" },
-    { "name": "Godot", "color": "#6f97b8", "icon": "/icons/godot.png" },
-    { "name": "Unity", "color": "#2a2a2a", "icon": "/icons/unity.png" },
-    { "name": "C#", "color": "#5E438F", "icon": "/icons/csharp.png" },
-    { "name": "Python", "color": "#1d692d", "icon": "/icons/python.png" },
-    { "name": "Blueprints", "color": "#3b2b77", "icon": "/icons/blueprint.png" },
-    { "name": "Unreal", "color": "#3b2b77", "icon": "/icons/unreal.png" },
-    { "name": "JS", "color": "#8a7a1f" },
-    { "name": "AI", "color": "#2f4d7a" },
-    { "name": "Custom Interface", "color": "#373f50" },
-    { "name": "Provided Interface", "color": "#373f50" },
-    { "name": "Custom Engine", "color": "#373f50" },
-    { "name": "Provided Engine", "color": "#373f50" },
-    { "name": "Research", "color": "#2f4d7a" },
-    { "name": "Solo", "color": "#1e2a44" },
-    { "name": "Group", "color": "#1e2a44" }
+    {
+      "name": "C++",
+      "color": "#659AD2",
+      "icon": "/icons/cpp.png"
+    },
+    {
+      "name": "GDScript",
+      "color": "#6f97b8"
+    },
+    {
+      "name": "Godot",
+      "color": "#6f97b8",
+      "icon": "/icons/godot.png"
+    },
+    {
+      "name": "Unity",
+      "color": "#2a2a2a",
+      "icon": "/icons/unity.png"
+    },
+    {
+      "name": "C#",
+      "color": "#5E438F",
+      "icon": "/icons/csharp.png"
+    },
+    {
+      "name": "Python",
+      "color": "#1d692d",
+      "icon": "/icons/python.png"
+    },
+    {
+      "name": "Blueprints",
+      "color": "#3b2b77",
+      "icon": "/icons/blueprint.png"
+    },
+    {
+      "name": "Unreal",
+      "color": "#3b2b77",
+      "icon": "/icons/unreal.png"
+    },
+    {
+      "name": "JS",
+      "color": "#8a7a1f"
+    },
+    {
+      "name": "AI",
+      "color": "#2f4d7a"
+    },
+    {
+      "name": "Custom Interface",
+      "color": "#373f50"
+    },
+    {
+      "name": "Provided Interface",
+      "color": "#373f50"
+    },
+    {
+      "name": "Custom Engine",
+      "color": "#373f50"
+    },
+    {
+      "name": "Provided Engine",
+      "color": "#373f50"
+    },
+    {
+      "name": "Research",
+      "color": "#2f4d7a"
+    },
+    {
+      "name": "Solo",
+      "color": "#1e2a44"
+    },
+    {
+      "name": "Group",
+      "color": "#1e2a44"
+    },
+    {
+      "name": "Vibe Coded",
+      "color": "#1e2a44",
+      "icon": ""
+    }
   ]
 }
