@@ -17,8 +17,8 @@ function Home() {
           Hi, I'm Quentin Demuynck
         </h1>
         <p className="hero-subtitle">
-          Game Developer &ndash; Currently studying Digital Arts &amp; Entertainment at Howest
-          Kortrijk
+          Game Developer that recently graduated at Digital Arts &amp; Entertainment at Howest
+          Kortrijk.
         </p>
         <p className="hero-line">Languages &amp; Tools: C++, C#, JavaScript, Python, Lua, GDScript, …</p>
         <p className="hero-line">Engines: Unreal Engine, Unity, Godot, School-built engines, Custom engine</p>
