@@ -36,6 +36,13 @@ function About() {
           LinkedIn
         </a>
         <span aria-hidden="true"> • </span>
+        <a
+            href=""
+            target="_blank"
+            rel="noreferrer">
+          Discord (coming soon)
+        </a>
+        <span aria-hidden="true"> • </span>
         <a href="/docs/quentin_demuynck_resume.pdf" target="_blank" rel="noreferrer">
           Resume
         </a>
