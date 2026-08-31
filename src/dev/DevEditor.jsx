@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 import TokenGate from './TokenGate.jsx'
 import ProjectForm from './ProjectForm.jsx'
 import MarkdownEditor from './MarkdownEditor.jsx'
 import TagManager from './TagManager.jsx'
 import { getProjectsFile, putProjectsFile, getTagsFile, putTagsFile, GitHubApiError } from './githubApi.js'
+import { useNavTransition } from '../context/NavTransitionContext.jsx'
 import './dev.css'
 
 function useNoIndex() {
@@ -257,7 +259,16 @@ function Editor({ token, onDisconnect }) {
 
 function DevEditor() {
   useNoIndex()
-  return <TokenGate>{(token, onDisconnect) => <Editor token={token} onDisconnect={onDisconnect} />}</TokenGate>
+  const { leaving } = useNavTransition()
+  return (
+    <motion.div
+      animate={{ opacity: leaving ? 0 : 1 }}
+      initial={{ opacity: 1 }}
+      transition={leaving ? { duration: 0.22, ease: [0.4, 0, 1, 1] } : { duration: 0 }}
+    >
+      <TokenGate>{(token, onDisconnect) => <Editor token={token} onDisconnect={onDisconnect} />}</TokenGate>
+    </motion.div>
+  )
 }
 
 export default DevEditor

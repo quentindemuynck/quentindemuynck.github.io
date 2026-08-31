@@ -5,6 +5,7 @@ import hljs from 'highlight.js'
 import { motion } from 'framer-motion'
 import { useProject } from '../hooks/useProjects.js'
 import TagChip from '../components/TagChip.jsx'
+import { useNavTransition } from '../context/NavTransitionContext.jsx'
 
 function useMarkdown(path) {
   const [html, setHtml] = useState(null)
@@ -56,6 +57,7 @@ function ProjectDetail() {
   const { slug } = useParams()
   const { project, loading: loadingProject } = useProject(slug)
   const { html: markdownHtml, loading: loadingMarkdown } = useMarkdown(project?.markdown)
+  const { leaving } = useNavTransition()
 
   useEffect(() => {
     if (markdownHtml) {
@@ -83,9 +85,9 @@ function ProjectDetail() {
     <motion.section
       className="view view-project-detail"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: leaving ? 0 : 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.45 }}
+      transition={leaving ? { duration: 0.22, ease: [0.4, 0, 1, 1] } : { duration: 0.45 }}
     >
       <Link to="/projects" className="back-link">
         &larr; Back to projects
